@@ -1,7 +1,7 @@
 <?php
 /**
  * An helper file for Laravel 4, to provide autocomplete information to your IDE
- * Generated for Laravel 4.2.17 on 2015-02-16.
+ * Generated for Laravel 4.2.17 on 2015-03-17.
  *
  * @author Barry vd. Heuvel <barryvdh@gmail.com>
  * @see https://github.com/barryvdh/laravel-ide-helper
@@ -12695,6 +12695,253 @@ namespace {
          */
         public static function delete($uri, $parameters = array(), $content = ''){
             return \Dingo\Api\Dispatcher::delete($uri, $parameters, $content);
+        }
+        
+    }
+
+
+    class Confide extends \Zizaco\Confide\Facade{
+        
+        /**
+         * Returns an object of the model set in auth config.
+         *
+         * @return mixed 
+         * @static 
+         */
+        public static function model(){
+            return \Zizaco\Confide\Confide::model();
+        }
+        
+        /**
+         * Get the currently authenticated user or null.
+         *
+         * @return \Zizaco\Confide\ConfideUserInterface|null 
+         * @static 
+         */
+        public static function user(){
+            return \Zizaco\Confide\Confide::user();
+        }
+        
+        /**
+         * Sets the 'confirmed' field of the user with the matching code to true.
+         *
+         * @param string $code
+         * @return bool Success
+         * @static 
+         */
+        public static function confirm($code){
+            return \Zizaco\Confide\Confide::confirm($code);
+        }
+        
+        /**
+         * Checks if a user with the given identity (email or username) already
+         * exists and retrieve it.
+         *
+         * @param array $identity Array containing at least 'username' or 'email'.
+         * @return \Zizaco\Confide\ConfideUserInterface|null 
+         * @static 
+         */
+        public static function getUserByEmailOrUsername($identity){
+            return \Zizaco\Confide\Confide::getUserByEmailOrUsername($identity);
+        }
+        
+        /**
+         * Attempt to log a user into the application with password and
+         * identity field(s), usually email or username.
+         *
+         * @param array $input Array containing at least 'username' or 'email' and 'password'.
+         *                               Optionally the 'remember' boolean.
+         * @param bool $mustBeConfirmed If true, the user must have confirmed his email account in order to log-in.
+         * @return bool Success.
+         * @static 
+         */
+        public static function logAttempt($input, $mustBeConfirmed = true){
+            return \Zizaco\Confide\Confide::logAttempt($input, $mustBeConfirmed);
+        }
+        
+        /**
+         * Asks the loginThrottler service if the given identity has reached the throttle_limit.
+         *
+         * @param mixed $identity The login identity.
+         * @return boolean True if the identity has reached the throttle_limit.
+         * @static 
+         */
+        public static function isThrottled($identity){
+            return \Zizaco\Confide\Confide::isThrottled($identity);
+        }
+        
+        /**
+         * If an user with the given email exists then generate a token for password
+         * change and saves it in the 'password_reminders' table with the email
+         * of the user.
+         *
+         * @param string $email
+         * @return string $token
+         * @static 
+         */
+        public static function forgotPassword($email){
+            return \Zizaco\Confide\Confide::forgotPassword($email);
+        }
+        
+        /**
+         * Delete the record of the given token from 'password_reminders' table.
+         *
+         * @param string $token Token retrieved from a forgotPassword.
+         * @return boolean Success.
+         * @static 
+         */
+        public static function destroyForgotPasswordToken($token){
+            return \Zizaco\Confide\Confide::destroyForgotPasswordToken($token);
+        }
+        
+        /**
+         * Returns a user that corresponds to the given reset password token or
+         * false if there is no user with the given token.
+         *
+         * @param string $token
+         * @return \Zizaco\Confide\ConfideUser 
+         * @static 
+         */
+        public static function userByResetPasswordToken($token){
+            return \Zizaco\Confide\Confide::userByResetPasswordToken($token);
+        }
+        
+        /**
+         * Log the user out of the application.
+         *
+         * @static 
+         */
+        public static function logout(){
+            return \Zizaco\Confide\Confide::logout();
+        }
+        
+        /**
+         * Display the default login view.
+         *
+         * @return \Illuminate\View\View 
+         * @static 
+         */
+        public static function makeLoginForm(){
+            return \Zizaco\Confide\Confide::makeLoginForm();
+        }
+        
+        /**
+         * Display the default signup view
+         *
+         * @return \Illuminate\View\View 
+         * @static 
+         */
+        public static function makeSignupForm(){
+            return \Zizaco\Confide\Confide::makeSignupForm();
+        }
+        
+        /**
+         * Display the forget password view.
+         *
+         * @return \Illuminate\View\View 
+         * @static 
+         */
+        public static function makeForgotPasswordForm(){
+            return \Zizaco\Confide\Confide::makeForgotPasswordForm();
+        }
+        
+        /**
+         * Display the forget password view
+         *
+         * @return \Illuminate\View\View 
+         * @static 
+         */
+        public static function makeResetPasswordForm($token){
+            return \Zizaco\Confide\Confide::makeResetPasswordForm($token);
+        }
+        
+    }
+
+
+    class Entrust extends \Zizaco\Entrust\EntrustFacade{
+        
+        /**
+         * Checks if the current user has a Role by its name
+         *
+         * @param string $name Role name.
+         * @return bool 
+         * @static 
+         */
+        public static function hasRole($permission){
+            return \Zizaco\Entrust\Entrust::hasRole($permission);
+        }
+        
+        /**
+         * Check if the current user has a permission by its name
+         *
+         * @param string $permission Permission string.
+         * @return bool 
+         * @static 
+         */
+        public static function can($permission){
+            return \Zizaco\Entrust\Entrust::can($permission);
+        }
+        
+        /**
+         * Get the currently authenticated user or null.
+         *
+         * @return \Zizaco\Entrust\User|null 
+         * @static 
+         */
+        public static function user(){
+            return \Zizaco\Entrust\Entrust::user();
+        }
+        
+        /**
+         * Filters a route for the name Role.
+         * 
+         * If the third parameter is null then return 403.
+         * Overwise the $result is returned.
+         *
+         * @param string $route Route pattern. i.e: "admin/*"
+         * @param array|string $roles The role(s) needed.
+         * @param mixed $result i.e: Redirect::to('/')
+         * @param bool $cumulative Must have all roles.
+         * @return mixed 
+         * @static 
+         */
+        public static function routeNeedsRole($route, $roles, $result = null, $cumulative = true){
+            return \Zizaco\Entrust\Entrust::routeNeedsRole($route, $roles, $result, $cumulative);
+        }
+        
+        /**
+         * Filters a route for the permission.
+         * 
+         * If the third parameter is null then return 403.
+         * Overwise the $result is returned.
+         *
+         * @param string $route Route pattern. i.e: "admin/*"
+         * @param array|string $permissions The permission needed.
+         * @param mixed $result i.e: Redirect::to('/')
+         * @param bool $cumulative Must have all permissions
+         * @return mixed 
+         * @static 
+         */
+        public static function routeNeedsPermission($route, $permissions, $result = null, $cumulative = true){
+            return \Zizaco\Entrust\Entrust::routeNeedsPermission($route, $permissions, $result, $cumulative);
+        }
+        
+        /**
+         * Filters a route for the permission.
+         * 
+         * If the third parameter is null then return 403.
+         * Overwise the $result is returned.
+         *
+         * @param string $route Route pattern. i.e: "admin/*"
+         * @param array|string $roles The role(s) needed.
+         * @param array|string $permissions The permission needed.
+         * @param mixed $result i.e: Redirect::to('/')
+         * @param bool $cumulative Must have all permissions
+         * @return void 
+         * @static 
+         */
+        public static function routeNeedsRoleOrPermission($route, $roles, $permissions, $result = null, $cumulative = false){
+            \Zizaco\Entrust\Entrust::routeNeedsRoleOrPermission($route, $roles, $permissions, $result, $cumulative);
         }
         
     }
