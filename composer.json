@@ -4,6 +4,12 @@
 	"keywords": ["framework", "laravel"],
 	"license": "MIT",
 	"type": "project",
+	"repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/khaeransori/ardent"
+        }
+    ],
 	"require": {
 		"laravel/framework": "4.2.*",
 		"laravelbook/ardent": "2.*",
@@ -14,9 +20,7 @@
 		"baum/baum": "~1.0",
 		"intervention/image": "~2.1",
 		"zizaco/confide": "~4.3@dev",
-		"zizaco/entrust": "1.2.*@dev"
-	},
-	"require-dev": {
+		"zizaco/entrust": "1.2.*@dev",
 		"way/generators": "~2.0"
 	},
 	"autoload": {
