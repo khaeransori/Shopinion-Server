@@ -65,11 +65,35 @@ Route::api('v1', function () {
 
 Route::api('v1', function () {
 	Route::group(['prefix' => 'mobile'], function () {
+		Route::resource('categories', 'MobileCategoriesController');
 		Route::resource('manufacturers', 'MobileManufacturersController');
 		Route::resource('products', 'MobileProductsController');
     });
 });//
 
+Route::get('jwt', function ()
+{
+	// grab credentials from the request
+    $credentials = Input::only('email', 'password');
+
+    try {
+        // attempt to verify the credentials and create a token for the user
+        if (! $token = JWTAuth::attempt($credentials)) {
+            return Response::json(['error' => 'invalid_credentials'], 401);
+        }
+    } catch (Tymon\JWTAuth\Exceptions\JWTException $e) {
+        // something went wrong whilst attempting to encode the token
+        return Response::json(['error' => 'could_not_create_token'], 500);
+    }
+
+    // all good so return the token
+    return Response::json(compact('token'));
+});
+
+Route::get('jwt-decode', ['before' => 'jwt-auth', function ()
+{
+	return JWTAuth::getToken();
+}]);
 // Confide routes
 Route::get('users/create', 'UsersController@create');
 Route::post('users', 'UsersController@store');

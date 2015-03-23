@@ -129,6 +129,7 @@ return array(
 		'Baum\BaumServiceProvider',
 		'Dingo\Api\Provider\ApiServiceProvider',
 		'Intervention\Image\ImageServiceProvider',
+		'Tymon\JWTAuth\Providers\JWTAuthServiceProvider',
 		'Zizaco\Confide\ServiceProvider',
 		'Zizaco\Entrust\EntrustServiceProvider'
 	),
@@ -202,6 +203,7 @@ return array(
 		'Confide'		    => 'Zizaco\Confide\Facade',
 		'Entrust'		    => 'Zizaco\Entrust\EntrustFacade',
 		'Image' 			=> 'Intervention\Image\Facades\Image',
+		'JWTAuth' 			=> 'Tymon\JWTAuth\Facades\JWTAuth',
 		'REST'				=> 'Shopinion\Services\Responses\RestResponse'
 	),
 

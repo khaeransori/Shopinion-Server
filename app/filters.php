@@ -171,3 +171,24 @@ App::error(function(Baum\MoveNotPossibleException $e)
     	]
     ), 400);
 });
+
+App::error(function(Tymon\JWTAuth\Exceptions\TokenExpiredException $e)
+{
+	return Response::json(
+		array(
+			'status_cde' => 403,
+			'message'	 => ['token_expired']
+			)
+	);
+});
+
+App::error(function(Tymon\JWTAuth\Exceptions\TokenInvalidException $e)
+{
+	return Response::json(
+		array(
+			'status_cde' => 403,
+			'message'	 => ['token_invalid']
+			)
+	);
+});
+

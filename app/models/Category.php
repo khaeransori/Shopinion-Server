@@ -116,7 +116,7 @@ class Category extends Node {
   //  *
   //  * @var string
   //  */
-  // protected $orderColumn = null;
+  protected $orderColumn = 'name';
 
   // /**
   // * With Baum, all NestedSet-related fields are guarded from mass-assignment
