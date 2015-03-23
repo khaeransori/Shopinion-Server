@@ -1,0 +1,15 @@
+{
+  "name": "Shopinion",
+  "description": "Shopinion Server",
+  "keywords": [
+    "mcommerce"
+  ],
+  "website": "https://github.com/khaeransori",
+  "repository": "https://github.com/khaeransori/shopinion-server",
+  "scripts": {
+    "postdeploy": "php artisan migrate"
+  },
+  "env": {
+    "ENV": "production",
+  }
+}
