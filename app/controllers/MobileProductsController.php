@@ -18,7 +18,7 @@ class MobileProductsController extends \BaseController {
 		$sale         = Input::get('sale', 0);
 		$manufacturer = Input::get('manufacturer', 0);
 		$category     = Input::get('category', 0);
-
+		$is_wishlist  = Input::get('is_wishlist', 0);
 		$products = $this->repo
 							->with('images')
 							->whereActive(1);
@@ -38,6 +38,17 @@ class MobileProductsController extends \BaseController {
 			});
 		}
 
+		if ($is_wishlist !== 0) {
+			$user = API::user();
+			$user->load('customer');
+
+			$customer_id = $user->customer->id;
+			$products = $products->whereHas('wishlist', function ($query) use ($customer_id)
+			{
+				$query->where('customer_id', $customer_id);
+			});
+		}
+
 		$products = $products->orderBy('created_at', 'DESC')
 					->paginate($limit = 10);
 
@@ -53,6 +64,7 @@ class MobileProductsController extends \BaseController {
 	 */
 	public function show($id)
 	{
+
 		$product = $this->repo
 							->with(
 								array(
@@ -68,6 +80,15 @@ class MobileProductsController extends \BaseController {
 							)
 							->findOrFail($id);
 
+		$product['is_wishlist'] = 0;
+		if (API::user()) {
+			$is_exist = $this->repo->whereHas('wishlist', function ($query) use ($id)
+			{
+				$query->where('product_id', $id);
+			})->count();
+
+			$product['is_wishlist'] = $is_exist;
+		}
 		return $this->rest->response(200, $product);
 	}
 }

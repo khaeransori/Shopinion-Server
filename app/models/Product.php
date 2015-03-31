@@ -103,7 +103,8 @@ class Product extends EloquentUuidModel {
 		'combinations'	=> array(self::HAS_MANY, 'ProductAttribute'),
 		'features'		=> array(self::BELONGS_TO_MANY, 'FeatureValue'),
 		'images'		=> array(self::HAS_MANY, 'ProductImage'),
-		'manufacturer'  => array(self::BELONGS_TO, 'Manufacturer')
+		'manufacturer'  => array(self::BELONGS_TO, 'Manufacturer'),
+		'wishlist'		=> array(self::BELONGS_TO_MANY, 'Customer', 'table' => 'wishlists')
 	);
 
 	public function productStock()

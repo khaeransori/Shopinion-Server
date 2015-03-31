@@ -77,7 +77,7 @@ Route::api('v1', function () {
 			Route::resource('categories', 'MobileCategoriesController');
 			Route::resource('manufacturers', 'MobileManufacturersController');
 			Route::resource('products', 'MobileProductsController');
-			Route::resource('whislist', 'WishlistsController', array('except' => array('index', 'update')));
+			Route::resource('wishlists', 'WishlistsController', array('only' => array('store', 'destroy')));
 
 		});
     });

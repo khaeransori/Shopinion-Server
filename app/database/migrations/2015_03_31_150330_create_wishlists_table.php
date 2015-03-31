@@ -14,11 +14,12 @@ class CreateWishlistsTable extends Migration {
 	{
 		Schema::create('wishlists', function(Blueprint $table)
 		{
-			$table->char('id', 36);
+			$table->increments('id');
             $table->char('product_id', 36)->index();
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
-            $table->char('user_id', 36)->index();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+
+            $table->char('customer_id', 36)->index();
+            $table->foreign('customer_id')->references('id')->on('customers')->onDelete('cascade');
             $table->timestamps();
 		});
 	}

@@ -57,6 +57,8 @@ class ProductsController extends \BaseController {
 	 */
 	public function store()
 	{
+		$active = Input::get('active', 0);
+
 		$product = new $this->repo;
 
 		if ($product->save()) {
@@ -70,7 +72,9 @@ class ProductsController extends \BaseController {
 
 			$this->stock->create($stock);
 
-			$product->categories()->sync(Input::get('categories'));
+			if (Input::has('categories') && is_array(Input::get('categories'))) {
+				$product->categories()->sync(Input::get('categories'));
+			}
 
 			return $this->rest->response(201, $product);
 		}

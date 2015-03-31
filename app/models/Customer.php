@@ -59,8 +59,9 @@ class Customer extends EloquentUuidModel {
 	];
 
 	public static $relationsData = array(
-		'addresses'	=> array(self::HAS_MANY, 'CustomerAddress'),
-		'user'  	=> array(self::BELONGS_TO, 'User')
+		'addresses' => array(self::HAS_MANY, 'CustomerAddress'),
+		'user'      => array(self::BELONGS_TO, 'User'),
+		'wishlist'  => array(self::BELONGS_TO_MANY, 'Product', 'table' => 'wishlists')
 	);
 	
 	/**

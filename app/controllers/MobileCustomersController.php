@@ -42,11 +42,12 @@ class MobileCustomersController extends \BaseController {
 		{
 			$user->where('email', Input::get('email'));
 		})->get()->first();
-	    $customer->load('user');
+		$wishlist_count = $customer->wishlist->count();
 
 	    $response = array(
-			'account' => $customer,
-			'token'   => $token
+			'account' 			=> $customer,
+			'token'   			=> $token,
+			'wishlist_count'	=> $wishlist_count
 	    	);
 	    return $this->rest->response(200, $response, false);
 	}

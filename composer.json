@@ -8,6 +8,10 @@
         {
             "type": "vcs",
             "url": "https://github.com/khaeransori/ardent"
+        },
+        {
+        	"type": "vcs",
+            "url": "https://github.com/khaeransori/api"
         }
     ],
 	"require": {

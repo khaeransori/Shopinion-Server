@@ -6,10 +6,12 @@ class WishlistsController extends Controller {
 
 	use ControllerTrait;
 
-	function __construct(Customer $customer, Product $product) {
+	function __construct(Customer $customer, Product $product, REST $rest) {
 		$this->protect();
+
 		$this->customer = $customer;
 		$this->product  = $product;
+		$this->rest     = $rest;
 	}
 
 	/**
@@ -19,20 +21,28 @@ class WishlistsController extends Controller {
 	 */
 	public function store()
 	{
-		return API::user();
-	}
 
-	/**
-	 * Display the specified wishlist.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($id)
-	{
-		$wishlist = Wishlist::findOrFail($id);
+		$user = API::user();
+		$user->load('customer');
+		$is_exist = $this->customer->whereHas('wishlist', function ($query)
+		{
+			$query->where('product_id', Input::get('product_id'));
+		})->count();
 
-		return View::make('wishlists.show', compact('wishlist'));
+		if ((bool) $is_exist) {
+			$query = $user->customer->wishlist()->detach(Input::get('product_id'));
+		} else {
+			$query = $user->customer->wishlist()->sync([Input::get('product_id')], false);
+		}
+
+		if ($query) {
+			$user->load('customer.wishlist');
+			
+			$response = $user->customer->wishlist->count();
+			return $this->rest->response(200, $response, false);
+		}
+
+		return $this->response->errorBadRequest();
 	}
 
 	/**
@@ -43,9 +53,17 @@ class WishlistsController extends Controller {
 	 */
 	public function destroy($id)
 	{
-		Wishlist::destroy($id);
+		$user = API::user();
+		$user->load('customer');
+		if ($user->customer->wishlist()->detach(Input::get('product_id'))) {
+			
+			$user->load('customer.wishlist');
+			
+			$response = $user->customer->wishlist->count();
+			return $this->rest->response(200, $response, false);
+		}
 
-		return Redirect::route('wishlists.index');
+		return $this->response->errorBadRequest();
 	}
 
 }
