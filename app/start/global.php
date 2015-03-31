@@ -49,6 +49,11 @@ Log::useFiles(storage_path().'/logs/laravel.log');
 App::error(function(Exception $exception, $code)
 {
 	Log::error($exception);
+	// $response = array(
+	// 	'status_code' => $code,
+	// 	'message'     => "There's an error"
+	// );
+	// return Response::json($response, $code);
 });
 
 /*
@@ -79,3 +84,4 @@ App::down(function()
 */
 
 require app_path().'/filters.php';
+require app_path().'/events.php';

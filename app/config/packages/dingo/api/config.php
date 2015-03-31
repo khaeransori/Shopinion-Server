@@ -103,7 +103,7 @@ return [
 
     'auth' => [
         'basic' => function ($app) {
-            return new Dingo\Api\Auth\BasicProvider($app['auth']);
+            return new Dingo\Api\Auth\JWTProvider($app['tymon.jwt.auth']);
         },
     ],
 

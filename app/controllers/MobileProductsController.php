@@ -17,6 +17,7 @@ class MobileProductsController extends \BaseController {
 	{
 		$sale         = Input::get('sale', 0);
 		$manufacturer = Input::get('manufacturer', 0);
+		$category     = Input::get('category', 0);
 
 		$products = $this->repo
 							->with('images')
@@ -27,7 +28,14 @@ class MobileProductsController extends \BaseController {
 		}
 
 		if ($manufacturer !== 0) {
-			$products = $products->whereManufacturerId($manufacturer);
+			$products = $products->where('manufacturer_id', $manufacturer);
+		}
+
+		if ($category !== 0) {
+			$products = $products->whereHas('category', function ($query)
+			{
+				$query->where('id', Input::get('category'));
+			});
 		}
 
 		$products = $products->orderBy('created_at', 'DESC')
@@ -54,7 +62,8 @@ class MobileProductsController extends \BaseController {
 									'category',
 									'combinations',
 									'features.feature',
-									'images'
+									'images',
+									'manufacturer'
 								)
 							)
 							->findOrFail($id);
