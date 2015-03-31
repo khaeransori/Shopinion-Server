@@ -123,8 +123,13 @@ class ProductsController extends \BaseController {
 		if ($product->updateUniques())
 		{
 			if ($toggle !== 1) {
-				$product->categories()->sync(Input::get('categories'));
-				$product->features()->sync(Input::get('features'));
+				if (Input::has('categories') && is_array(Input::get('categories'))) {
+					$product->categories()->sync(Input::get('categories'));
+				}
+
+				if (Input::has('features') && is_array(Input::get('features'))) {
+					$product->features()->sync(Input::get('features'));
+				}
 			}
 
 			return $this->rest->response(202, $product);
