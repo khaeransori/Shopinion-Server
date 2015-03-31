@@ -16,11 +16,11 @@
     ],
 	"require": {
 		"laravel/framework": "4.2.*",
-		"laravelbook/ardent": "2.*",
+		"khaeransori/ardent": "2.*",
 		"barryvdh/laravel-ide-helper": "~1.11",
 		"doctrine/dbal": "~2.3",
 		"rhumsaa/uuid": "~2.8",
-		"dingo/api": "0.8.*",
+		"khaeransori/api": "0.8.*",
 		"baum/baum": "~1.0",
 		"intervention/image": "~2.1",
 		"zizaco/confide": "~4.3@dev",
