@@ -122,7 +122,7 @@ class ProductsController extends \BaseController {
 
 		if ($product->updateUniques())
 		{
-			if ($toggle !== 1) {
+			if ($toggle === 0) {
 				if (Input::has('categories') && is_array(Input::get('categories'))) {
 					$product->categories()->sync(Input::get('categories'));
 				}
