@@ -34,8 +34,8 @@ use Shopinion\Services\Repositories\EloquentUuidModel;
  */
 class Customer extends EloquentUuidModel {
 
-	public $autoHydrateEntityFromInput 		= true;    // hydrates on new entries' validation
-  	public $forceEntityHydrationFromInput 	= true; // hydrates whenever validation is called
+	public $autoHydrateEntityFromInput 		= false;    // hydrates on new entries' validation
+  	public $forceEntityHydrationFromInput 	= false; // hydrates whenever validation is called
 
   	protected $dates = ['last_visited_at'];
 
