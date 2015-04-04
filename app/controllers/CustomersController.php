@@ -105,6 +105,7 @@ class CustomersController extends \BaseController {
 		$customer->last_name	= Input::get('last_name');
 		$customer->phone		= Input::get('phone');
 		$customer->note			= Input::get('note');
+		$customer->fill(Input::all());
 
 		if ($customer->save()) {
 			$user->email 					= Input::get('email');
