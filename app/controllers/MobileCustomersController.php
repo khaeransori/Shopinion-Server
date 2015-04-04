@@ -54,6 +54,10 @@ class MobileCustomersController extends \BaseController {
 
 	public function register()
 	{
+		// little hack of heaven
+		$str = strtotime(Input::get('dob') . ' + 1 day');
+		$dob = date("Y/m/d", $str);
+
 		DB::beginTransaction();
 		
 		$user                        = new $this->user;
@@ -68,6 +72,7 @@ class MobileCustomersController extends \BaseController {
 			$customer             = new $this->repo;
 			$customer->first_name = Input::get('first_name');
 			$customer->last_name  = Input::get('last_name');
+			$customer->dob        = $dob;
 			$customer->phone      = Input::get('phone');
 			$customer->user_id    = $user->id;
 
