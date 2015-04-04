@@ -17,7 +17,7 @@ class CreateOrderDetailsTable extends Migration {
 			$table->char('id', 36);
 			$table->char('order_id', 36);
 			$table->char('product_id', 36);
-			$table->char('product_attribute_id', 36);
+			$table->char('product_attribute_id', 36)->default(0);
 			$table->longText('product_name');
 			$table->string('product_reference');
 			$table->integer('product_quantity');

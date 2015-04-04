@@ -18,6 +18,7 @@ class CreateStockMovementReasonsTable extends Migration {
 			$table->boolean('sign');
 			$table->string('name');
 			$table->timestamps();
+			$table->softDeletes();
 		});
 	}
 

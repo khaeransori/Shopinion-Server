@@ -17,6 +17,7 @@ class CreateManufacturersTable extends Migration {
 			$table->char('id', 36);
 			$table->string('name');
 			$table->longText('description');
+			$table->boolean('active');
 			$table->timestamps();
 			$table->softDeletes();
 			$table->primary('id');

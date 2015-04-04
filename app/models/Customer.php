@@ -44,7 +44,9 @@ class Customer extends EloquentUuidModel {
 		'user_id'		=> 'required',
 		'first_name'	=> 'required|min:3',
 		'last_name' 	=> 'required|min:3',
-		'phone'			=> 'required'
+		'dob'			=> 'required',
+		'phone'			=> 'required',
+		'active'		=> 'required'
 	);
 
 	// Don't forget to fill this array

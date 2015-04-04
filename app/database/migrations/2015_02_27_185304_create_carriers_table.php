@@ -16,7 +16,7 @@ class CreateCarriersTable extends Migration {
 		{
 			$table->char('id', 36);
 			$table->string('name');
-			$table->boolean('on_store');
+			$table->boolean('on_store')->default(0);
 			$table->timestamps();
 			$table->softDeletes();
 			$table->primary('id');

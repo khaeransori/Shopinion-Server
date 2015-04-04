@@ -11,13 +11,15 @@ class ConfideSetupUsersTable extends Migration
     {
         // Creates the users table
         Schema::create('users', function ($table) {
-            $table->increments('id');
+            $table->char('id', 36);
             $table->string('email')->unique();
             $table->string('password');
             $table->string('confirmation_code');
             $table->string('remember_token')->nullable();
             $table->boolean('confirmed')->default(false);
             $table->timestamps();
+            $table->softDeletes();
+            $table->primary('id');
         });
 
         // Creates password reminders table

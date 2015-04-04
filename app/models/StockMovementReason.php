@@ -28,11 +28,12 @@ class StockMovementReason extends Ardent {
 	
 	// Add your validation rules here
 	public static $rules = [
-		// 'title' => 'required'
+		'sign'	=> 'required',
+		'name' => 'required'
 	];
 
 	// Don't forget to fill this array
-	protected $fillable = [];
+	protected $fillable = ['sign', 'name'];
 
 	public static $relationsData = array(
 		'movement'  => array(self::HAS_MANY, 'StockMovement')

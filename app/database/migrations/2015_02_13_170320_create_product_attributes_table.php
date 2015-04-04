@@ -16,7 +16,7 @@ class CreateProductAttributesTable extends Migration {
 		{
 			$table->char('id', 36);
 			$table->char('product_id', 36);
-			$table->boolean('default_on');
+			$table->boolean('default_on')->default(0);
 			$table->timestamps();
 			$table->softDeletes();
 			$table->primary('id');

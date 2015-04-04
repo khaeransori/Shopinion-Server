@@ -34,7 +34,7 @@ class Cart extends EloquentUuidModel {
 
 	// Add your validation rules here
 	public static $rules = array(
-		'customer_id'	=> 'required'
+		'customer_id'	=> 'required',
 	);
 
 	// Don't forget to fill this array

@@ -27,6 +27,7 @@ class CreateCategoriesTable extends Migration {
       // $table->string('name', 255);
       $table->string('name');
       $table->longText('description');
+      $table->boolean('active');
       // $table->string('link_rewrite');
       // $table->string('meta_title');
       // $table->string('meta_keywords');

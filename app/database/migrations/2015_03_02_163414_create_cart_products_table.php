@@ -17,7 +17,7 @@ class CreateCartProductsTable extends Migration {
 			$table->char('id', 36);
 			$table->char('cart_id', 36);
 			$table->char('product_id', 36);
-			$table->char('product_attribute_id', 36);
+			$table->char('product_attribute_id', 36)->default(0);
 			$table->integer('qty');
 			$table->timestamps();
 			$table->softDeletes();

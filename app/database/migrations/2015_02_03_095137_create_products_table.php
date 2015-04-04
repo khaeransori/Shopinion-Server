@@ -16,12 +16,13 @@ class CreateProductsTable extends Migration {
 		{
 			$table->char('id', 36);
 			$table->char('manufacturer_id', 36)->nullable();
+			$table->char('default_category_id', 36)->nullable();
 			$table->string('name');
 			$table->longText('description')->nullable();
 			$table->string('reference_code', 32)->unique();
-			$table->string('ean13', 13)->nullable();
-			$table->string('upc', 12)->nullable();
 			$table->decimal('price', 20, 6)->default(0);
+			$table->decimal('sale_price', 20,6)->default(0);
+			$table->boolean('active');
 			$table->timestamps();
 			$table->softDeletes();
 			$table->primary('id');

@@ -16,10 +16,10 @@ class CreateOrderStatesTable extends Migration {
 		{
 			$table->char('id', 36);
 			$table->string('name');
-			$table->boolean('delivered');
-			$table->boolean('paid');
-			$table->boolean('canceled');
-			$table->integer('order');
+			$table->boolean('delivered')->default(0);
+			$table->boolean('paid')->default(0);
+			$table->boolean('canceled')->default(0);
+			$table->integer('order')->default(0);
 			$table->timestamps();
 			$table->softDeletes();
 			$table->primary('id');
