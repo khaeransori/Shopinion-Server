@@ -22,7 +22,7 @@ class CreateProductsTable extends Migration {
 			$table->string('reference_code', 32)->unique();
 			$table->decimal('price', 20, 6)->default(0);
 			$table->decimal('sale_price', 20,6)->default(0);
-			$table->boolean('active');
+			$table->boolean('active')->default(false);
 			$table->timestamps();
 			$table->softDeletes();
 			$table->primary('id');

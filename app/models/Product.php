@@ -82,8 +82,7 @@ class Product extends EloquentUuidModel {
 	// Add your validation rules here
 	public static $rules = array(
 		'name'				=> 'required|min:3',
-		'reference_code' 	=> 'required|unique:products|max:32',
-		'active'			=> 'required'
+		'reference_code' 	=> 'required|unique:products|max:32'
 	);
 
 	// Don't forget to fill this array

@@ -16,7 +16,7 @@ class CreatePaymentsTable extends Migration {
 		{
 			$table->char('id', 36);
 			$table->string('name');
-			$table->boolean('is_cod')->default(0);
+			$table->boolean('is_cod')->default(false);
 			$table->timestamps();
 			$table->softDeletes();
 			$table->primary('id');

@@ -27,7 +27,6 @@ class Manufacturer extends EloquentUuidModel {
 
 	// Add your validation rules here
 	public static $rules = array(
-		'active'		=> 'required',
 		'description' 	=> 'required',
 		'name'			=> 'required|min:3'
 	);

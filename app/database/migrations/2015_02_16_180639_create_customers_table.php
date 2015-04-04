@@ -22,7 +22,7 @@ class CreateCustomersTable extends Migration {
 			$table->date('dob');
 			$table->string('phone');
 			$table->longText('note')->nullable();
-			$table->boolean('active');
+			$table->boolean('active')->default(false);
 			$table->datetime('last_visited_at')->nullable();
 			$table->timestamps();
 			$table->softDeletes();

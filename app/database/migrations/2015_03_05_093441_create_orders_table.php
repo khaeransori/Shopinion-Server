@@ -27,8 +27,8 @@ class CreateOrdersTable extends Migration {
 			$table->decimal('total_product', 20, 6);
 			$table->decimal('shipping_price', 20, 6)->nullable();
 			$table->string('tracking_number')->nullable();
-			$table->boolean('delivered')->default(0);
-			$table->boolean('paid')->default(0);
+			$table->boolean('delivered')->default(false);
+			$table->boolean('paid')->default(false);
 			$table->timestamps();
 			$table->softDeletes();
 			$table->primary('id');

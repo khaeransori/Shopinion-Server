@@ -20,8 +20,8 @@ class CreateCartsTable extends Migration {
 			$table->char('delivery_address_id', 36)->nullable();
 			$table->char('invoice_address_id', 36)->nullable();
 			$table->char('customer_id', 36);
-			$table->boolean('is_customer')->default(0);
-			$table->boolean('ordered')->default(0);
+			$table->boolean('is_customer')->default(false);
+			$table->boolean('ordered')->default(false);
 			$table->timestamps();
 			$table->softDeletes();
 			$table->primary('id');
