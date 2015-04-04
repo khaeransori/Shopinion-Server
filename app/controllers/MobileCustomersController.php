@@ -54,6 +54,8 @@ class MobileCustomersController extends \BaseController {
 
 	public function register()
 	{
+		$real_dob = explode('/', Input::get('dob'));
+
 		DB::beginTransaction();
 		
 		$user                        = new $this->user;
@@ -68,6 +70,7 @@ class MobileCustomersController extends \BaseController {
 			$customer             = new $this->repo;
 			$customer->first_name = Input::get('first_name');
 			$customer->last_name  = Input::get('last_name');
+			$customer->dob 		  = $real_dob[2].'-'.$real_dob[1].'-'.$real_dob;
 			$customer->phone      = Input::get('phone');
 			$customer->user_id    = $user->id;
 
