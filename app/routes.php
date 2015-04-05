@@ -67,6 +67,8 @@ Route::api('v1', function () {
 	Route::group(['prefix' => 'api'], function () {
 		Route::group(['prefix' => 'mobile'], function ()
 		{
+			Route::post('init', 'MobileCustomersController@init');
+			
 			Route::group(['prefix' => 'accounts'], function ()
 			{
 				Route::post('login', 'MobileCustomersController@login');

@@ -43,38 +43,35 @@ class CustomersController extends \BaseController {
 	 */
 	public function store()
 	{
-		$before_save_rules = array(
-			'first_name'	=> 'required|min:3',
-			'last_name' 	=> 'required|min:3',
-			'phone'			=> 'required'
-		);
+		DB::beginTransaction();
+		
+		$user                        = new $this->user;
+		$user->email                 = Input::get('email');
+		$user->password              = Input::get('password');
+		$user->password_confirmation = Input::get('password');
+		$user->confirmation_code     = md5(uniqid(mt_rand(), true));
+		$user->confirmed             = 1;
 
-		$user 							= new $this->user;
-        $user->email 					= Input::get('email');
-        $user->password 				= Input::get('password');
-        $user->password_confirmation 	= Input::get('password');
-        $user->confirmation_code 		= md5(uniqid(mt_rand(), true));
-        $user->confirmed 				= 1;
-
-		$customer 				= new $this->repo;
-		$customer->first_name	= Input::get('first_name');
-		$customer->last_name	= Input::get('last_name');
-		$customer->phone		= Input::get('phone');
-
-		$validator = Validator::make(Input::all(), $before_save_rules);
-
-		if ($validator->passes()) {
-			if ($user->save()) {
-					$customer->user_id 		= $user->id;
-					$customer->save();
-
-					return $this->rest->response(201, $customer);
-			}
+		if ($user->save()) {
 			
-			return $this->response->errorBadRequest($user->errors());
+			$customer 				= new $this->repo;
+			$customer->first_name	= Input::get('first_name');
+			$customer->last_name	= Input::get('last_name');
+			$customer->phone		= Input::get('phone');
+
+			if ($customer->save()) {
+				DB::commit();
+
+				$customer->load('user');
+
+				return $this->rest->response(201, $customer);
+			}
+
+			DB::rollBack();
+			return $this->response->errorBadRequest($customer->errors());
 		}
 
-		return $this->response->errorBadRequest($validator->errors());
+		return $this->response->errorBadRequest($user->errors());
 	}
 
 	/**
@@ -101,10 +98,6 @@ class CustomersController extends \BaseController {
 		$customer 	= $this->repo->findOrFail($id);
 		$user 		= $this->user->findOrFail($customer->user_id);
 
-		$customer->first_name	= Input::get('first_name');
-		$customer->last_name	= Input::get('last_name');
-		$customer->phone		= Input::get('phone');
-		$customer->note			= Input::get('note');
 		$customer->fill(Input::all());
 
 		if ($customer->save()) {

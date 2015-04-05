@@ -72,7 +72,8 @@ class MobileProductsController extends \BaseController {
 									'aggregateStock',
 									'categories',
 									'category',
-									'combinations',
+									'combinations.attribute_combinations.group',
+									'combinations.stock',
 									'features.feature',
 									'images',
 									'manufacturer'

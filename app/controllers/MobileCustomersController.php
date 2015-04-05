@@ -2,10 +2,11 @@
 
 class MobileCustomersController extends \BaseController {
 
-	function __construct(Customer $repo, User $user, REST $rest) {
-		$this->user = $user;
-		$this->repo = $repo;
-		$this->rest = $rest;
+	function __construct(Category $category, Customer $repo, User $user, REST $rest) {
+		$this->category = $category;
+		$this->user     = $user;
+		$this->repo     = $repo;
+		$this->rest     = $rest;
 	}
 
 	public function forgotPassword()
@@ -21,8 +22,81 @@ class MobileCustomersController extends \BaseController {
         return $this->rest->response(200, $response, false);
 	}
 	
+	public function init()
+	{
+		$token = Input::get('token', FALSE);
+
+		$root = $this->category->root();
+		$root->load([
+			'children' => function ($children)
+			{
+				$children->whereActive(1)
+							->orderBy('name', 'ASC');
+			}
+			]);
+
+		$response['category'] = $root;
+
+		if ($token !== FALSE) {
+			JWTAuth::setToken($token);
+			try {
+		        if (JWTAuth::authenticate($token)) {
+		        	$customer = $this->repo
+						->where('active', 1)
+						->whereHas('user', function ($query)
+						{
+							$query->where('email', Input::get('email'));
+						})
+						->get()
+						->first();
+
+					if ($customer->count() > 0) {
+						$wishlist_count = $customer->wishlist->count();
+
+						$token = JWTAuth::fromUser($customer->user);
+						$response['account'] = $customer;
+						$response['token']   = $token;
+						$response['wishlist_count'] = $wishlist_count;
+					}
+		        }
+		    } catch (Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
+				$customer = $this->repo
+					->where('active', 1)
+					->whereHas('user', function ($query)
+					{
+						$query->where('email', Input::get('email'));
+					})
+					->get()
+					->first();
+				if ($customer->count() > 0) {
+					$wishlist_count = $customer->wishlist->count();
+
+					$token = JWTAuth::fromUser($customer->user);
+					$response['account'] = $customer;
+					$response['token']   = $token;
+					$response['wishlist_count'] = $wishlist_count;
+				}
+		    } catch (Exception $e) {
+		    }
+		}
+
+		return $this->rest->response(200, $response, false);
+	}
+
 	public function login()
 	{
+		$customer = $this->repo
+							->whereHas('user', function ($user)
+							{
+								$user->where('email', Input::get('email'));
+							})
+							->get()
+							->first();
+
+		if ($customer->active === 0) {
+			$response = array('message' => 'Akun anda belum diaktifkan oleh administrator.');
+			return $this->response->errorBadRequest($response);
+		}
 		// grab credentials from the request
 	    $credentials = Input::only('email', 'password');
 
@@ -38,10 +112,7 @@ class MobileCustomersController extends \BaseController {
 	        return $this->response->error($response, 500);
 	    }
 
-		$customer = $this->repo->whereHas('user', function ($user)
-		{
-			$user->where('email', Input::get('email'));
-		})->get()->first();
+		
 		$wishlist_count = $customer->wishlist->count();
 
 	    $response = array(
