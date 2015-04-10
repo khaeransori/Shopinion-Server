@@ -74,12 +74,22 @@ Route::api('v1', function () {
 				Route::post('login', 'MobileCustomersController@login');
 				Route::post('forgot_password', 'MobileCustomersController@forgotPassword');
 				Route::post('register', 'MobileCustomersController@register');
+				Route::get('detail', 'MobileCustomersController@detail');
+				Route::post('update', 'MobileCustomersController@update');
+
+				Route::resource('addresses', 'MobileCustomerAddressesController', array('only' => array('store', 'show', 'update', 'destroy')));
 			});
 			
+			Route::resource('bank_accounts', 'BankAccountsController', array('only' => array('index')));
+			Route::resource('carriers', 'CarriersController', array('only' => array('index')));
 			Route::resource('categories', 'MobileCategoriesController');
 			Route::resource('manufacturers', 'MobileManufacturersController');
+			Route::resource('orders', 'MobileOrdersController', array('only' => array('index', 'store', 'show')));
 			Route::resource('products', 'MobileProductsController');
+			Route::resource('payment_methods', 'PaymentsController', array('only' => array('index')));
+			Route::resource('payment_confirmation', 'PaymentConfirmationsController', array('only' => array('store')));
 			Route::resource('wishlists', 'WishlistsController', array('only' => array('store', 'destroy')));
+			Route::resource('carts', 'MobileCartsController');
 
 		});
     });

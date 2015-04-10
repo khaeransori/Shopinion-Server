@@ -15,7 +15,7 @@ class PaymentsController extends \BaseController {
 	 */
 	public function index()
 	{
-		$payments = $this->repo->get();
+		$payments = $this->repo->all();
 
 		return $this->rest->response(200, $payments);
 	}

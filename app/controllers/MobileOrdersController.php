@@ -1,6 +1,10 @@
 <?php
 
-class OrdersController extends \BaseController {
+use Dingo\Api\Routing\ControllerTrait;
+
+class MobileOrdersController extends Controller {
+
+	use ControllerTrait;
 
 	function __construct(
 		Order $repo, 
@@ -18,6 +22,8 @@ class OrdersController extends \BaseController {
 		Stock $stock,
 		StockMovement $movement) {
 
+		$this->protect();
+
 		$this->repo              = $repo;
 		$this->detail            = $detail;
 		$this->product           = $product;
@@ -33,74 +39,57 @@ class OrdersController extends \BaseController {
 		$this->movement          = $movement;
 		$this->history 			 = $history;
 	}
+
 	/**
-	 * Display a listing of orders
+	 * Display a listing of the resource.
+	 * GET /mobileorders
 	 *
 	 * @return Response
 	 */
 	public function index()
 	{
-		$delivered = Input::get('delivered', 0);
+		$user = API::user();
+		$customer = $user->customer;
+
 		$orders = $this->repo
-						->with(
-							'customer',
-							'cart',
-							'carrier',
-							'detail',
-							'delivery_address',
-							'history.state',
-							'invoice_address',
-							'state',
-							'payment'
-							)
-						->where('delivered', $delivered)
-						->get();
+						->with('state')
+						->where('customer_id', $customer->id)
+						->orderBy('created_at', 'DESC')
+						->paginate($limit = 10);
 
 		return $this->rest->response(200, $orders);
 	}
 
 	/**
-	 * Store a newly created order in storage.
+	 * Store a newly created resource in storage.
+	 * POST /mobileorders
 	 *
 	 * @return Response
 	 */
 	public function store()
 	{
-		$customer_id         = Input::get('customer_id');
-		$cart_id             = Input::get('cart_id');
+		$user = API::user();
+		$cart = $this->cart
+					->where('customer_id', $user->customer->id)
+					->where('is_customer', 1)
+					->where('ordered', 0)
+					->first();
+
 		$carrier_id          = Input::get('carrier_id');
-		$shipping_price      = Input::get('shipping_price', 0);
-		$delivery_address_id = Input::get('delivery_address_id', '');
-		$invoice_address_id  = Input::get('invoice_address_id', '');
-		$products            = Input::get('products');
-		$payment_id          = Input::get('payment_id');
-		$total_product       = Input::get('total_product');
-		$message 			 = Input::get('message', '');
-
-		$customer = $this->customer->findOrFail($customer_id);
-		$cart     = $this->cart->findOrFail($cart_id);
-		$carrier  = $this->carrier->findOrFail($carrier_id);
-		$payment  = $this->payment->findOrFail($payment_id);
-
-		if ($carrier->on_store !== 1) {
-			$delivery_address = $this->address->findOrFail($delivery_address_id);
-			$invoice_address  = $this->address->findOrFail($invoice_address_id);
-		} else {
-			$delivery_address_id = "";
-			$invoice_address_id  = "";
-		}
+		$delivery_address_id = Input::get('delivery_address_id', 0);
+		$invoice_address_id  = Input::get('invoice_address_id', 0);
+		$message             = Input::get('message', '');
+		$payment_id          = Input::get('payment_id', 0);
 
 		$product_to_input = array();
 		$warning          = array();
 		$total_price      = 0;
-
-		foreach ($products as $product) {
+		foreach ($cart->products as $product) {
 			$p = $this->product->findOrFail($product['product_id']);
-
 			$product_name  = $p->name;
-			$product_price = ($p->sale_price !== '0.000000') ? $p->sale_price : $p->price;
+			$product_price = (!($p->sale_price === '0.000000')) ? $p->sale_price : $p->price;
 
-			if ($product['product_attribute_id'] !== "") {
+			if (!($product['product_attribute_id'] === '0')) {
 				$combination = $this->product_attribute->findOrFail($product['product_attribute_id']);
 				$combination->load('attribute_combinations', 'stock');
 
@@ -118,8 +107,7 @@ class OrdersController extends \BaseController {
 						'qty'                  => $combination->stock->qty
 					);
 				}
-				
-				
+
 			} else {
 				if ($p->product_stock->qty < $product['qty']) {
 					$warning[] = array(
@@ -149,13 +137,23 @@ class OrdersController extends \BaseController {
 		}
 
 		// # get state awal
-		$state         = $this->state->whereOrder(2)->get()->first();
+		$carrier = $this->carrier->findOrFail($carrier_id);
+		if ($carrier->on_store === 1) {
+			$state         = $this->state
+									->where('order', 2)
+									->first();
+		} else {
+			$state         = $this->state
+									->where('order', 1)
+									->where('canceled', 0)
+									->first();
+		}
 		$current_state = $state->id;
 
 		// # validasi dulu sebelum di instansasi
 		$data = array(
-			'customer_id'         => $customer_id,
-			'cart_id'             => $cart_id,
+			'customer_id'         => $user->customer->id,
+			'cart_id'             => $cart->id,
 			'carrier_id'          => $carrier_id,
 			'delivery_address_id' => $delivery_address_id,
 			'invoice_address_id'  => $invoice_address_id,
@@ -163,12 +161,11 @@ class OrdersController extends \BaseController {
 			'message'             => $message,
 			'payment_id'          => $payment_id,
 			'total_product'       => $total_price,
-			'shipping_price'      => $shipping_price
+			'shipping_price'      => 0
 		);
-
 		// return $arrayName = array('products' => $product_to_input );
-
 		$validator = Validator::make($data, Order::$rules);
+
 		// # instantiate Orders
 		if ($validator->passes()) {
 
@@ -183,15 +180,15 @@ class OrdersController extends \BaseController {
 
 					$this->detail->create($product);
 
-					if ($product['product_attribute_id'] !== "") {
+					if (!($product['product_attribute_id'] === '0')) {
 						$stock = $this->stock
 										->where('product_attribute_id', $product['product_attribute_id'])
-										->get()->first();
+										->first();
 					} else {
 						$stock = $this->stock
 										->where('product_id', $product['product_id'])
 										->where('product_attribute_id', 0)
-										->get()->first();
+										->first();
 					}
 
 					$stock->qty = ($stock->qty - $product['product_quantity']);
@@ -218,23 +215,42 @@ class OrdersController extends \BaseController {
 
 				$this->history->create($history);
 				
+				// kosong, bikin cart baru
+				$new_cart = new $this->cart();
+
+				$new_cart->customer_id 			= $user->customer->id;
+				$new_cart->carrier_id 			= 0;
+				$new_cart->delivery_address_id 	= 0;
+				$new_cart->invoice_address_id 	= 0;
+				$new_cart->is_customer 			= 1;
+				$new_cart->ordered 				= 0;
+				
+				$new_cart->save();
+
+				$order['cart'] = array(
+					'id' => $cart->id,
+					'qty'=> 0
+				);
 				DB::commit();
 
 				return $this->rest->response(201, $order);
 			} catch (\Exception $e) {
 				DB::rollBack();
 				
-				return $this->response->errorBadRequest($e->getMessage());
+				return $e->getMessage();
+				// return $this->response->errorBadRequest($e->getMessage());
 
 			}
 			
 		}
 
 		return $this->response->errorBadRequest($validator->messages());
+		
 	}
 
 	/**
-	 * Display the specified order.
+	 * Display the specified resource.
+	 * GET /mobileorders/{id}
 	 *
 	 * @param  int  $id
 	 * @return Response
@@ -243,12 +259,9 @@ class OrdersController extends \BaseController {
 	{
 		$order = $this->repo
 						->with(
-							'customer.user',
-							'cart',
 							'carrier',
 							'detail.product.images',
 							'delivery_address',
-							'history.state',
 							'invoice_address',
 							'state',
 							'payment'
@@ -259,78 +272,39 @@ class OrdersController extends \BaseController {
 	}
 
 	/**
-	 * Update the specified order in storage.
+	 * Show the form for editing the specified resource.
+	 * GET /mobileorders/{id}/edit
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function edit($id)
+	{
+		//
+	}
+
+	/**
+	 * Update the specified resource in storage.
+	 * PUT /mobileorders/{id}
 	 *
 	 * @param  int  $id
 	 * @return Response
 	 */
 	public function update($id)
 	{
-		$order = $this->repo->findOrFail($id);
-		$add_history = FALSE;
-
-		$shipping_price      = Input::get('shipping_price', 0);
-		$tracking_number     = Input::get('tracking_number');
-		$current_state_order = Input::get('current_state_order');
-
-		// # get state awal
-		$state         = $this->state->whereOrder($current_state_order)->first();
-		$current_state = $state->id;
-
-		if ($state->paid === 1) {
-			$order->paid = 1;
-		}
-
-		if (($order->paid === 1) && ($state->delivered === 1)) {
-			$order->delivered = 1;
-		}
-
-		if ($current_state !== $order->current_state) {
-			$add_history = TRUE;
-		}
-		$order->shipping_price  = $shipping_price;
-		$order->tracking_number = $tracking_number;
-		$order->current_state   = $current_state;
-
-		if ($order->save()) {
-			if (TRUE === $add_history) {
-				$history = array(
-					'order_id' => $id,
-					'order_state_id' => $current_state
-					);
-
-				$this->history->create($history);
-			}
-
-			$order->load(
-							'customer.user',
-							'cart',
-							'carrier',
-							'detail.product.images',
-							'delivery_address',
-							'history.state',
-							'invoice_address',
-							'state',
-							'payment'
-							);
-
-			return $this->rest->response(201, $order);
-		}
-
-		return $this->response->errorBadRequest();
+		//
 	}
 
 	/**
-	 * Remove the specified order from storage.
+	 * Remove the specified resource from storage.
+	 * DELETE /mobileorders/{id}
 	 *
 	 * @param  int  $id
 	 * @return Response
 	 */
 	public function destroy($id)
 	{
-		Order::destroy($id);
-
-		return Redirect::route('orders.index');
+		//
 	}
 
 }

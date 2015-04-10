@@ -1,20 +1,18 @@
 <?php
 
-// Composer: "fzaninotto/faker": "v1.3.0"
-use Faker\Factory as Faker;
-
 class PaymentsTableSeeder extends Seeder {
 
 	public function run()
 	{
-		$faker = Faker::create();
+		Payment::create([
+			'name' => 'At Store',
+			'is_cod' => 1
+		]);
 
-		foreach(range(1, 10) as $index)
-		{
-			Payment::create([
-
-			]);
-		}
+		Payment::create([
+			'name' => 'Bank Wire',
+			'is_cod' => 0
+		]);
 	}
 
 }

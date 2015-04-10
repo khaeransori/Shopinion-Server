@@ -15,7 +15,7 @@ class CarriersController extends \BaseController {
 	 */
 	public function index()
 	{
-		$carriers = $this->repo->get();
+		$carriers = $this->repo->all();
 
 		return $this->rest->response(200, $carriers);
 	}

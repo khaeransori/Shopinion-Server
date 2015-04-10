@@ -37,8 +37,6 @@ class Customer extends EloquentUuidModel {
 	public $autoHydrateEntityFromInput 		= false;    // hydrates on new entries' validation
   	public $forceEntityHydrationFromInput 	= false; // hydrates whenever validation is called
 
-  	protected $dates = ['last_visited_at'];
-
 	// Add your validation rules here
 	public static $rules = array(
 		'user_id'		=> 'required',

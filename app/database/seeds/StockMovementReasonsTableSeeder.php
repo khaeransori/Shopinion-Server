@@ -1,20 +1,22 @@
 <?php
 
-// Composer: "fzaninotto/faker": "v1.3.0"
-use Faker\Factory as Faker;
-
 class StockMovementReasonsTableSeeder extends Seeder {
 
 	public function run()
 	{
-		$faker = Faker::create();
+		StockMovementReason::create([
+			'sign' => -1,
+			'name' => 'Decrease'
+		]);
 
-		foreach(range(1, 10) as $index)
-		{
-			StockMovementReason::create([
+		StockMovementReason::create([
+			'sign' => 1,
+			'name' => 'Increase'
+		]);
 
-			]);
-		}
+		StockMovementReason::create([
+			'sign' => -1,
+			'name' => 'Customer Order'
+		]);
 	}
-
 }

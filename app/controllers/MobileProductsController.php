@@ -18,10 +18,12 @@ class MobileProductsController extends \BaseController {
 		$sale         = Input::get('sale', 0);
 		$manufacturer = Input::get('manufacturer', 0);
 		$category     = Input::get('category', 0);
-		$is_wishlist  = Input::get('is_wishlist', 0);
+		$is_wishlist  = Input::get('is_wishlist', false);
+		$term 		  = Input::get('term', false);
+
 		$products = $this->repo
 							->with('images')
-							->whereActive(1);
+							->where('active', 1);
 
 		if ($sale !== 0) {
 			$products = $products->where('sale_price', '!=', "0.000000");
@@ -38,14 +40,23 @@ class MobileProductsController extends \BaseController {
 			});
 		}
 
-		if ($is_wishlist !== 0) {
+		if (! $is_wishlist === false) {
 			$user = API::user();
+
 			$user->load('customer');
 
 			$customer_id = $user->customer->id;
 			$products = $products->whereHas('wishlist', function ($query) use ($customer_id)
 			{
 				$query->where('customer_id', $customer_id);
+			});
+		}
+
+		if (! $term === false) {
+			$products = $products->where(function ($query) use ($term)
+			{
+				$query->where('name', 'like', "%$term%")
+						->orWhere('reference_code', 'like', "%$term%");
 			});
 		}
 
