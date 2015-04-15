@@ -55,6 +55,7 @@ class CustomersController extends \BaseController {
 		if ($user->save()) {
 			
 			$customer 				= new $this->repo;
+			$customer->user_id		= $user->id;
 			$customer->first_name	= Input::get('first_name');
 			$customer->last_name	= Input::get('last_name');
 			$customer->phone		= Input::get('phone');
