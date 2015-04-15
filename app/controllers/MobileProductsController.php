@@ -22,7 +22,7 @@ class MobileProductsController extends \BaseController {
 		$term 		  = Input::get('term', false);
 
 		$products = $this->repo
-							->with('images')
+							->with('images', 'manufacturer')
 							->where('active', 1);
 
 		if ($sale !== 0) {
