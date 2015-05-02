@@ -14,10 +14,10 @@
 App::before(function($request)
 {
 	//
-	header('Access-Control-Allow-Origin: *');
-    header('Access-Control-Allow-Methods: GET, POST, OPTIONS, DELETE, PUT, PATCH');
-    header('Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization, X-Request-With');
-    header('Access-Control-Allow-Credentials: true');
+	header('Access-Control-Allow-Origin', '*');
+    header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, DELETE, PUT, PATCH');
+    header('Access-Control-Allow-Headers', 'Origin, Content-Type, Accept, Authorization, X-Request-With');
+    header('Access-Control-Allow-Credentials', true);
 });
 
 
@@ -177,7 +177,7 @@ App::error(function(Tymon\JWTAuth\Exceptions\JWTException $e, $code)
     if ($e instanceof Tymon\JWTAuth\Exceptions\TokenExpiredException) {
         return Response::json(['token_expired'], $e->getStatusCode());
     } else if ($e instanceof Tymon\JWTAuth\Exceptions\TokenInvalidException) {
-        return Response::json(['asdfsdfsdfsdfsdfdsf'], $e->getStatusCode());
+        return Response::json(['token_invalid'], $e->getStatusCode());
     }
 });
 
