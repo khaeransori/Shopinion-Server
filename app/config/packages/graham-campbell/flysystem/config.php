@@ -91,7 +91,7 @@ return [
             'password'   => getenv("FTP_PASSWORD"),
             'root'       => getenv("FTP_ROOT"),
             // 'passive'    => true,
-            'ssl'        => true,
+            // 'ssl'        => true,
             // 'timeout'    => 20,
             // 'visibility' => 'public',
             // 'eventable'  => true,
