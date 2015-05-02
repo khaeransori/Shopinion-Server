@@ -4,17 +4,20 @@ use App\Core\Entities\ProductImage\ProductImageRepository;
 use App\Core\Entities\Product\ProductRepository;
 use App\Core\Criteria\GetByProductIdCriteria;
 use Dingo\Api\Routing\ControllerTrait;
+use GrahamCampbell\Flysystem\FlysystemManager;
 use Illuminate\Validation\Factory;
 
 class ProductImagesController extends \Controller {
 
 	use ControllerTrait;
 
+	protected $flysystem;
 	protected $product;
 	protected $repository;
 	protected $validator;
 
-	function __construct(Factory $validator, ProductImageRepository $repository, ProductRepository $product) {
+	function __construct(Factory $validator, FlysystemManager $flysystem, ProductImageRepository $repository, ProductRepository $product) {
+		$this->flysystem = $flysystem;
 		$this->product = $product;
 		$this->repository = $repository;
 		$this->validator = $validator;
@@ -80,7 +83,7 @@ class ProductImagesController extends \Controller {
 				$filename  = $repository->id . '.png';
 			    $cloudPath = 'images/product/' . $product_id . '/' . $repository->id . '/';
 
-			    $filesystem = \Flysystem::connection();
+			    // $this->flysystem = \Flysystem::connection();
 
 			    // $default = Image::make($file)->resize(null, 800, function ($constraint)
 			    // {
@@ -93,11 +96,11 @@ class ProductImagesController extends \Controller {
 			    $small 	 = \Image::make($file)->fit(98)->encode('png');
 			    $cart 	 = \Image::make($file)->fit(80)->encode('png');
 
-			    $filesystem->put($cloudPath . $filename, (string) $default);
-			    $filesystem->put($cloudPath . "large_" . $filename, (string) $default);
-			    $filesystem->put($cloudPath . "medium_" . $filename, (string) $default);
-			    $filesystem->put($cloudPath . "small_" . $filename, (string) $default);
-			    $filesystem->put($cloudPath . "cart_" . $filename, (string) $default);
+			    $this->flysystem->put($cloudPath . $filename, (string) $default);
+			    $this->flysystem->put($cloudPath . "large_" . $filename, (string) $default);
+			    $this->flysystem->put($cloudPath . "medium_" . $filename, (string) $default);
+			    $this->flysystem->put($cloudPath . "small_" . $filename, (string) $default);
+			    $this->flysystem->put($cloudPath . "cart_" . $filename, (string) $default);
 
 			    \DB::commit();
 				return $this->response->array($repository->toArray());
