@@ -28,7 +28,7 @@
 		"laravel/framework": "4.2.*",
 		"laravelbook/ardent": "dev-master",
 		"league/flysystem-dropbox": "~1.0",
-		"prettus/laravel-repository": "2.0.*",
+		"prettus/laravel-repository": "dev-master",
 		"rhumsaa/uuid": "~2.8",
 		"tymon/jwt-auth": "0.4.*",
 		"way/generators": "~2.0",
