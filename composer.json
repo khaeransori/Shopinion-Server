@@ -33,7 +33,8 @@
 		"tymon/jwt-auth": "0.4.*",
 		"way/generators": "~2.0",
 		"zizaco/confide": "~4.3@dev",
-		"zizaco/entrust": "1.2.*@dev"
+		"zizaco/entrust": "1.2.*@dev",
+		"ext-gd": "*"
 	},
 	"autoload": {
 		"classmap": [
