@@ -127,6 +127,7 @@ return array(
 		'Way\Generators\GeneratorsServiceProvider',
 
 		'Baum\BaumServiceProvider',
+		'Barryvdh\Cors\CorsServiceProvider',
 		'Dingo\Api\Provider\ApiServiceProvider',
 		'GrahamCampbell\Flysystem\FlysystemServiceProvider',
 		'Intervention\Image\ImageServiceProvider',

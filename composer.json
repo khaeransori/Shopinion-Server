@@ -35,7 +35,8 @@
 		"zizaco/confide": "~4.3@dev",
 		"zizaco/entrust": "1.2.*@dev",
 		"ext-gd": "*",
-		"ext-ftp": "*"
+		"ext-ftp": "*",
+		"barryvdh/laravel-cors": "0.2.x"
 	},
 	"autoload": {
 		"classmap": [
