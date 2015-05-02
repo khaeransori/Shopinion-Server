@@ -105,6 +105,7 @@ class ProductImagesController extends \Controller {
 			
 			throw new \Dingo\Api\Exception\StoreResourceFailedException("Error Processing Request", $validator->messages());
 		} catch (\Exception $e) {
+			return $e;
 			throw new \Dingo\Api\Exception\StoreResourceFailedException("Error Processing Request", $e->getErrors());
 		}
 	}
