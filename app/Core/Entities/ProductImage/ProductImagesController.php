@@ -85,16 +85,35 @@ class ProductImagesController extends \Controller {
 
 			    // $this->flysystem = \Flysystem::connection();
 
-			    // $default = Image::make($file)->resize(null, 800, function ($constraint)
-			    // {
-			    // 	$constraint->aspectRatio();
-			    // });
+			    $default = \Image::make($file)->resize(null, 800, function ($constraint)
+			    {
+			    	$constraint->aspectRatio();
+			    })->encode('png');
 
-			    $default = \Image::make($file)->fit(800)->encode('png');
-			    $large 	 = \Image::make($file)->fit(458)->encode('png');
-			    $medium  = \Image::make($file)->fit(125)->encode('png');
-			    $small 	 = \Image::make($file)->fit(98)->encode('png');
-			    $cart 	 = \Image::make($file)->fit(80)->encode('png');
+			    $large = \Image::make($file)->resize(null, 458, function ($constraint)
+			    {
+			    	$constraint->aspectRatio();
+			    })->encode('png');
+
+			    $medium = \Image::make($file)->resize(null, 125, function ($constraint)
+			    {
+			    	$constraint->aspectRatio();
+			    })->encode('png');
+
+			    $small = \Image::make($file)->resize(null, 98, function ($constraint)
+			    {
+			    	$constraint->aspectRatio();
+			    })->encode('png');
+
+			    $cart = \Image::make($file)->resize(null, 80, function ($constraint)
+			    {
+			    	$constraint->aspectRatio();
+			    })->encode('png');
+			    // $default = \Image::make($file)->fit(800)->encode('png');
+			    // $large 	 = \Image::make($file)->fit(458)->encode('png');
+			    // $medium  = \Image::make($file)->fit(125)->encode('png');
+			    // $small 	 = \Image::make($file)->fit(98)->encode('png');
+			    // $cart 	 = \Image::make($file)->fit(80)->encode('png');
 
 			    $this->flysystem->put($cloudPath . $filename, (string) $default);
 			    $this->flysystem->put($cloudPath . "large_" . $filename, (string) $default);
