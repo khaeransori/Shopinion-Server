@@ -81,7 +81,7 @@ return array(
 	|
 	*/
 
-	'username' => 'khaer.ansori@gmail.com',
+	'username' => getenv("EMAIL"),
 
 	/*
 	|--------------------------------------------------------------------------
@@ -94,7 +94,7 @@ return array(
 	|
 	*/
 
-	'password' => 'gbveyvjitkgntpnx',
+	'password' => getenv("EMAIL_PASSWORD"),
 
 	/*
 	|--------------------------------------------------------------------------

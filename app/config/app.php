@@ -128,10 +128,11 @@ return array(
 
 		'Baum\BaumServiceProvider',
 		'Dingo\Api\Provider\ApiServiceProvider',
+		'GrahamCampbell\Flysystem\FlysystemServiceProvider',
 		'Intervention\Image\ImageServiceProvider',
 		'Tymon\JWTAuth\Providers\JWTAuthServiceProvider',
 		'Zizaco\Confide\ServiceProvider',
-		'Zizaco\Entrust\EntrustServiceProvider'
+		'Zizaco\Entrust\EntrustServiceProvider',
 	),
 
 	/*
@@ -202,9 +203,9 @@ return array(
 		'API' 				=> 'Dingo\Api\Facade\API',
 		'Confide'		    => 'Zizaco\Confide\Facade',
 		'Entrust'		    => 'Zizaco\Entrust\EntrustFacade',
+		'Flysystem' 		=> 'GrahamCampbell\Flysystem\Facades\Flysystem',
 		'Image' 			=> 'Intervention\Image\Facades\Image',
-		'JWTAuth' 			=> 'Tymon\JWTAuth\Facades\JWTAuth',
-		'REST'				=> 'Shopinion\Services\Responses\RestResponse'
+		'JWTAuth' 			=> 'Tymon\JWTAuth\Facades\JWTAuth'
 	),
 
 );

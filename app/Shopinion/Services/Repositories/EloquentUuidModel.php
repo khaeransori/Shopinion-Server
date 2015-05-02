@@ -3,6 +3,7 @@
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
 use LaravelBook\Ardent\Ardent;
 use Rhumsaa\Uuid\Uuid;
+use Carbon\Carbon;
 
 class EloquentUuidModel extends Ardent
 {
@@ -21,17 +22,26 @@ class EloquentUuidModel extends Ardent
 
 	public function getCreatedAtAttribute($value)
 	{
-		return strtotime($value) * 1000;
+	    $dt = new Carbon($value);
+	    $datetime = $dt->toIso8601String();
+
+	    return $datetime;
 	}
 
 	public function getUpdatedAtAttribute($value)
 	{
-		return strtotime($value) * 1000;
+		$dt = new Carbon($value);
+	    $datetime = $dt->toIso8601String();
+
+	    return $datetime;
 	}
 
 	public function getDeletedAtAttribute($value)
 	{
-		return ($value == null) ? null : strtotime($value) * 1000;
+		$dt = new Carbon($value);
+	    $datetime = $dt->toIso8601String();
+
+	    return $datetime;
 	}
 
 	/**

@@ -10,100 +10,74 @@
 | and give it the Closure to execute when that URI is requested.
 |
 */
+require app_path().'/routes/customer.php';
 
 Route::get('/', function()
 {
 	return View::make('hello');
 });
 
-Route::api('v1', function () {
-	Route::group(['prefix' => 'backend'], function () {
-		# BEGIN SETTINGS GROUPS #
-		Route::resource('bank_accounts', 'BankAccountsController');
-		# END SETTINGS GROUPS #
-		
-		# BEGIN CATALOG GROUPS #
-		Route::resource('attribute_groups', 'AttributeGroupsController');
-		Route::resource('attributes', 'AttributesController');
 
-		Route::resource('features', 'FeaturesController');
-		Route::resource('feature_values', 'FeatureValuesController');
-
-		Route::resource('categories', 'CategoriesController');
-
-		Route::resource('manufacturers', 'ManufacturersController');
-
-		Route::resource('products', 'ProductsController');
-		Route::resource('product_attributes', 'ProductAttributesController');
-		Route::resource('product_images', 'ProductImagesController');
-		# END CATALOG GROUPS #
-		
-		# BEGIN CUSTOMERS GROUPS #
-		Route::resource('customers', 'CustomersController');
-		Route::resource('customer_addresses', 'CustomerAddressesController');
-		# END CUSTOMERS GROUPS #
-		
-		# BEGIN STOCK GROUPS #
-		Route::resource('stock_movements', 'StockMovementsController');
-		Route::resource('stock_movement_reasons', 'StockMovementReasonsController');
-		# END STOCK GROUPS #
-		
-		# BEGIN CART GROUPS #
-		Route::resource('carts', 'CartsController');
-		Route::resource('cart_products', 'CartProductsController');
-		Route::resource('carriers', 'CarriersController');
-		Route::resource('payments', 'PaymentsController');
-		Route::resource('order_states', 'OrderStatesController');
-		# END CART GROUPS #
-		
-		Route::resource('orders', 'OrdersController');
-
-		Route::get('reports', 'ReportsController@index');
-
-    });
-});//
 
 Route::api('v1', function () {
 	Route::group(['prefix' => 'api'], function () {
-		Route::group(['prefix' => 'mobile'], function ()
-		{
-			Route::post('init', 'MobileCustomersController@init');
-			
-			Route::group(['prefix' => 'accounts'], function ()
-			{
-				Route::post('login', 'MobileCustomersController@login');
-				Route::post('forgot_password', 'MobileCustomersController@forgotPassword');
-				Route::post('register', 'MobileCustomersController@register');
-				Route::get('detail', 'MobileCustomersController@detail');
-				Route::post('update', 'MobileCustomersController@update');
+		# BEGIN SETTINGS GROUPS #
+		Route::resource('bank_accounts', '\App\Core\Entities\BankAccount\BankAccountsController');
+		# END SETTINGS GROUPS #
+		
+		# BEGIN CATALOG GROUPS #
+		Route::resource('attribute_groups', '\App\Core\Entities\AttributeGroup\AttributeGroupsController');
+		Route::resource('attributes', '\App\Core\Entities\Attribute\AttributesController');
 
-				Route::resource('addresses', 'MobileCustomerAddressesController', array('only' => array('store', 'show', 'update', 'destroy')));
-			});
-			
-			Route::resource('bank_accounts', 'BankAccountsController', array('only' => array('index')));
-			Route::resource('carriers', 'CarriersController', array('only' => array('index')));
-			Route::resource('categories', 'MobileCategoriesController');
-			Route::resource('manufacturers', 'MobileManufacturersController');
-			Route::resource('orders', 'MobileOrdersController', array('only' => array('index', 'store', 'show')));
-			Route::resource('products', 'MobileProductsController');
-			Route::resource('payment_methods', 'PaymentsController', array('only' => array('index')));
-			Route::resource('payment_confirmation', 'PaymentConfirmationsController', array('only' => array('store')));
-			Route::resource('wishlists', 'WishlistsController', array('only' => array('store', 'destroy')));
-			Route::resource('carts', 'MobileCartsController');
+		Route::resource('features', '\App\Core\Entities\Feature\FeaturesController');
+		Route::resource('feature_values', '\App\Core\Entities\FeatureValue\FeatureValuesController');
 
-		});
+		Route::resource('categories', '\App\Core\Entities\Category\CategoriesController');
+
+		Route::resource('manufacturers', '\App\Core\Entities\Manufacturer\ManufacturersController');
+
+		Route::resource('products', '\App\Core\Entities\Product\ProductsController');
+		Route::resource('product_attributes', '\App\Core\Entities\ProductAttribute\ProductAttributesController');
+		Route::resource('product_images', '\App\Core\Entities\ProductImage\ProductImagesController');
+		# END CATALOG GROUPS #
+		
+		# BEGIN CUSTOMERS GROUPS #
+		Route::resource('customers', '\App\Core\Entities\Customer\CustomersController');
+		Route::resource('customer_addresses', '\App\Core\Entities\CustomerAddress\CustomerAddressesController');
+		# END CUSTOMERS GROUPS #
+		
+		# BEGIN STOCK GROUPS #
+		Route::resource('stock_movements', '\App\Core\Entities\StockMovement\StockMovementsController');
+		Route::resource('stock_movement_reasons', '\App\Core\Entities\StockMovementReason\StockMovementReasonsController');
+		# END STOCK GROUPS #
+		
+		# BEGIN CART GROUPS #
+		Route::resource('carts', '\App\Core\Entities\Cart\CartsController');
+		Route::resource('cart_products', '\App\Core\Entities\CartProduct\CartProductsController');
+		Route::resource('carriers', '\App\Core\Entities\Carrier\CarriersController');
+		Route::resource('payments', '\App\Core\Entities\Payment\PaymentsController');
+		Route::resource('order_states', '\App\Core\Entities\OrderState\OrderStatesController');
+		# END CART GROUPS #
+		
+		Route::resource('orders', '\App\Core\Entities\Order\OrdersController');
+		Route::resource('reports', '\App\Core\Entities\Report\ReportsController', ['only' => 'index']);
+
+		
+		Route::get('users/reset_password/{token}', '\App\Core\Entities\User\UsersController@resetPassword');
+		Route::post('users/reset_password', '\App\Core\Entities\User\UsersController@doResetPassword');
+		Route::get('users/confirm/{code}', '\App\Core\Entities\User\UsersController@confirm');
+		Route::resource('users', '\App\Core\Entities\User\UsersController');
     });
 });
 
-
 // Confide routes
-Route::get('users/create', 'UsersController@create');
-Route::post('users', 'UsersController@store');
-Route::get('users/login', 'UsersController@login');
-Route::post('users/login', 'UsersController@doLogin');
-Route::get('users/confirm/{code}', 'UsersController@confirm');
-Route::get('users/forgot_password', 'UsersController@forgotPassword');
-Route::post('users/forgot_password', 'UsersController@doForgotPassword');
-Route::get('users/reset_password/{token}', 'UsersController@resetPassword');
-Route::post('users/reset_password', 'UsersController@doResetPassword');
-Route::get('users/logout', 'UsersController@logout');
+// Route::get('users/create', 'UsersController@create');
+// Route::post('users', 'UsersController@store');
+// Route::get('users/login', 'UsersController@login');
+// Route::post('users/login', 'UsersController@doLogin');
+// Route::get('users/confirm/{code}', 'UsersController@confirm');
+// Route::get('users/forgot_password', 'UsersController@forgotPassword');
+// Route::post('users/forgot_password', 'UsersController@doForgotPassword');
+// Route::get('users/reset_password/{token}', 'UsersController@resetPassword');
+// Route::post('users/reset_password', 'UsersController@doResetPassword');
+// Route::get('users/logout', 'UsersController@logout');

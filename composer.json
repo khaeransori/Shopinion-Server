@@ -12,21 +12,28 @@
         {
         	"type": "vcs",
             "url": "https://github.com/khaeransori/api"
+        },
+        {
+        	"type": "vcs",
+            "url": "https://github.com/khaeransori/laravel-repository"
         }
     ],
 	"require": {
+		"barryvdh/laravel-ide-helper": "~1.11",
+		"baum/baum": "~1.0",
+		"dingo/api": "dev-master",
+		"doctrine/dbal": "~2.3",
+		"graham-campbell/flysystem": "~1.0",
+		"intervention/image": "~2.1",
 		"laravel/framework": "4.2.*",
 		"laravelbook/ardent": "dev-master",
-		"barryvdh/laravel-ide-helper": "~1.11",
-		"doctrine/dbal": "~2.3",
+		"league/flysystem-dropbox": "~1.0",
+		"prettus/laravel-repository": "2.0.*",
 		"rhumsaa/uuid": "~2.8",
-		"dingo/api": "dev-master",
-		"baum/baum": "~1.0",
-		"intervention/image": "~2.1",
-		"zizaco/confide": "~4.3@dev",
-		"zizaco/entrust": "1.2.*@dev",
+		"tymon/jwt-auth": "0.4.*",
 		"way/generators": "~2.0",
-		"tymon/jwt-auth": "0.4.*"
+		"zizaco/confide": "~4.3@dev",
+		"zizaco/entrust": "1.2.*@dev"
 	},
 	"autoload": {
 		"classmap": [
@@ -36,7 +43,8 @@
 			"app/database/migrations",
 			"app/database/seeds",
 			"app/tests/TestCase.php",
-			"app/Shopinion"
+			"app/Shopinion",
+			"app/Core"
 		]
 	},
 	"scripts": {
