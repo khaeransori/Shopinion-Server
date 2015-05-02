@@ -4,7 +4,7 @@ class OrderStatesTableSeeder extends Seeder {
 
 	public function run()
 	{
-		OrderState::create([
+		\App\Core\Entities\OrderState\OrderState::create([
 			'name'      => 'Menunggu Biaya Kirim',
 			'delivered' => 0,
 			'paid'      => 0,
@@ -12,7 +12,7 @@ class OrderStatesTableSeeder extends Seeder {
 			'order'     => 1
 		]);
 
-		OrderState::create([
+		\App\Core\Entities\OrderState\OrderState::create([
 			'name'      => 'Batal',
 			'delivered' => 0,
 			'paid'      => 0,
@@ -20,7 +20,7 @@ class OrderStatesTableSeeder extends Seeder {
 			'order'     => 1
 		]);
 
-		OrderState::create([
+		\App\Core\Entities\OrderState\OrderState::create([
 			'name'      => 'Menunggu Pembayaran',
 			'delivered' => 0,
 			'paid'      => 0,
@@ -28,7 +28,7 @@ class OrderStatesTableSeeder extends Seeder {
 			'order'     => 2
 		]);
 
-		OrderState::create([
+		\App\Core\Entities\OrderState\OrderState::create([
 			'name'      => 'Menunggu Konfirmasi Telah Dibayar',
 			'delivered' => 0,
 			'paid'      => 0,
@@ -36,7 +36,7 @@ class OrderStatesTableSeeder extends Seeder {
 			'order'     => 3
 		]);
 
-		OrderState::create([
+		\App\Core\Entities\OrderState\OrderState::create([
 			'name'      => 'Sedang dalam proses pengiriman',
 			'delivered' => 0,
 			'paid'      => 1,
@@ -44,7 +44,7 @@ class OrderStatesTableSeeder extends Seeder {
 			'order'     => 4
 		]);
 
-		OrderState::create([
+		\App\Core\Entities\OrderState\OrderState::create([
 			'name'      => 'Terkirim',
 			'delivered' => 1,
 			'paid'      => 0,
@@ -52,7 +52,7 @@ class OrderStatesTableSeeder extends Seeder {
 			'order'     => 5
 		]);
 
-		OrderState::create([
+		\App\Core\Entities\OrderState\OrderState::create([
 			'name'      => 'Finished',
 			'delivered' => 0,
 			'paid'      => 0,
