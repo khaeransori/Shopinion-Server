@@ -34,7 +34,8 @@
 		"way/generators": "~2.0",
 		"zizaco/confide": "~4.3@dev",
 		"zizaco/entrust": "1.2.*@dev",
-		"ext-gd": "*"
+		"ext-gd": "*",
+		"ext-ftp": "*"
 	},
 	"autoload": {
 		"classmap": [
