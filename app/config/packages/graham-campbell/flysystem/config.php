@@ -85,13 +85,13 @@ return [
 
         'ftp' => [
             'driver'     => 'ftp',
-            'host'       => 'bf4.a91.myftpupload.com',
+            'host'       => getenv("FTP_HOST"),
             'port'       => 21,
-            'username'   => 'khaeransori',
-            'password'   => 'G4495ja!',
-            'root'       => '/khaeransori/Apps/Shopinion',
+            'username'   => getenv("FTP_USERNAME"),
+            'password'   => getenv("FTP_PASSWORD"),
+            'root'       => getenv("FTP_ROOT"),
             // 'passive'    => true,
-            // 'ssl'        => true,
+            'ssl'        => true,
             // 'timeout'    => 20,
             // 'visibility' => 'public',
             // 'eventable'  => true,
