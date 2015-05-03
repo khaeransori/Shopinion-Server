@@ -79,24 +79,23 @@ class ProductImagesController extends \Controller {
 			if ($validator->passes()) {
 				$repository = $this->repository->create(\Input::all());
 
-
 				$filename  = $repository->id . '.png';
 			    $cloudPath = 'images/product/' . $product_id . '/' . $repository->id . '/';
 
 			    $default = \Image::make($file)->resize(null, 800, function ($constraint)
 			    {
 			    	$constraint->aspectRatio();
-			    })->encode('png');
+			    })->encode('data-url');
 
 			    $large = \Image::make($file)->resize(null, 458, function ($constraint)
 			    {
 			    	$constraint->aspectRatio();
-			    })->encode('png');
+			    })->encode('data-url');
 
 			    $medium = \Image::make($file)->resize(null, 125, function ($constraint)
 			    {
 			    	$constraint->aspectRatio();
-			    })->encode('png');
+			    })->encode('data-url');
 
 			    $small = \Image::make($file)->resize(null, 98, function ($constraint)
 			    {
@@ -106,7 +105,7 @@ class ProductImagesController extends \Controller {
 			    $cart = \Image::make($file)->resize(null, 80, function ($constraint)
 			    {
 			    	$constraint->aspectRatio();
-			    })->encode('png');
+			    })->encode('data-url');
 
 			    $this->flysystem->put($cloudPath . "small_" . $filename, (string) $small);
 
