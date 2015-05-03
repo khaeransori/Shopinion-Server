@@ -55,16 +55,16 @@ class ProductImage extends EloquentUuidModel {
 
 	public function getSmallSourceAttribute()
 	{
-		return getenv("IMAGES_PATH") . '/' . $this->attributes['product_id'] . '/' . $this->attributes['id'] . '/small_' . $this->attributes['id'] . '.png';
+		return getenv("IMAGES_PATH") . '/' . $this->attributes['product_id'] . '/' . $this->attributes['id'] . '/cart_' . $this->attributes['id'] . '.png';
 	}
 
 	public function getMediumSourceAttribute()
 	{
-		return getenv("IMAGES_PATH") . '/' . $this->attributes['product_id'] . '/' . $this->attributes['id'] . '/medium_' . $this->attributes['id'] . '.png';
+		return getenv("IMAGES_PATH") . '/' . $this->attributes['product_id'] . '/' . $this->attributes['id'] . '/' . $this->attributes['id'] . '.png';
 	}
 
 	public function getLargeSourceAttribute()
 	{
-		return getenv("IMAGES_PATH") . '/' . $this->attributes['product_id'] . '/' . $this->attributes['id'] . '/large' . $this->attributes['id'] . '.png';
+		return getenv("IMAGES_PATH") . '/' . $this->attributes['product_id'] . '/' . $this->attributes['id'] . '/' . $this->attributes['id'] . '.png';
 	}
 }

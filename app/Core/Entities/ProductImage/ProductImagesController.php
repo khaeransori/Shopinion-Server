@@ -87,38 +87,39 @@ class ProductImagesController extends \Controller {
 			    	$constraint->aspectRatio();
 			    })->encode('data-url');
 
-			    $large = \Image::make($file)->resize(null, 458, function ($constraint)
-			    {
-			    	$constraint->aspectRatio();
-			    })->encode('data-url');
+			    // $large = \Image::make($file)->resize(null, 458, function ($constraint)
+			    // {
+			    // 	$constraint->aspectRatio();
+			    // })->encode('data-url');
 
-			    $medium = \Image::make($file)->resize(null, 125, function ($constraint)
-			    {
-			    	$constraint->aspectRatio();
-			    })->encode('data-url');
+			    // $medium = \Image::make($file)->resize(null, 125, function ($constraint)
+			    // {
+			    // 	$constraint->aspectRatio();
+			    // })->encode('data-url');
 
 			    $small = \Image::make($file)->resize(null, 98, function ($constraint)
 			    {
 			    	$constraint->aspectRatio();
 			    })->encode('png');
 
-			    $cart = \Image::make($file)->resize(null, 80, function ($constraint)
-			    {
-			    	$constraint->aspectRatio();
-			    })->encode('data-url');
+			    // $cart = \Image::make($file)->resize(null, 80, function ($constraint)
+			    // {
+			    // 	$constraint->aspectRatio();
+			    // })->encode('data-url');
 
+			    $this->flysystem->put($cloudPath . $filename, (string) $default);
 			    $this->flysystem->put($cloudPath . "small_" . $filename, (string) $small);
 
-			    $data = array(
-			    	'cloudPath' => $cloudPath,
-			    	'filename'	=> $filename,
-			    	'default' => (string) $default,
-			    	'large'	  => (string) $large,
-			    	'medium'  => (string) $medium,
-			    	'cart'	  => (string) $cart
-			    );
+			    // $data = array(
+			    // 	'cloudPath' => $cloudPath,
+			    // 	'filename'	=> $filename,
+			    // 	'default' => (string) $default,
+			    // 	'large'	  => (string) $large,
+			    // 	'medium'  => (string) $medium,
+			    // 	'cart'	  => (string) $cart
+			    // );
 
-			    \Queue::push('\App\Core\Worker\ImageUploader', $data);
+			    // \Queue::push('\App\Core\Worker\ImageUploader', $data);
 			    \DB::commit();
 				return $this->response->array($repository->toArray());
 			}
