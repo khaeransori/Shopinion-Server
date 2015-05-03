@@ -46,7 +46,7 @@ class CustomersController extends \Controller {
 
 			return $this->response->array($response->toArray());
 		} catch (\Exception $e) {
-			throw new Dingo\Api\Exception\ResourceException("Error Processing Request", $e->errors());
+			throw new Dingo\Api\Exception\ResourceException("Error Processing Request", $e->getMessage());
 			
 		}
 	}
@@ -107,7 +107,7 @@ class CustomersController extends \Controller {
 			throw new \Dingo\Api\Exception\StoreResourceFailedException("Error Processing Request", $e->getErrors());
 		} catch (\Exception $e) {
 			\DB::rollBack();
-			throw new \Dingo\Api\Exception\StoreResourceFailedException("Error Processing Request", $e->getErrors());
+			throw new \Dingo\Api\Exception\StoreResourceFailedException("Error Processing Request", $e->getMessage());
 		}
 	}
 
@@ -119,8 +119,12 @@ class CustomersController extends \Controller {
 	 */
 	public function show($id)
 	{
-		$repository = $this->repository->with(['user', 'addresses', 'carts.products', 'orders.detail'])->find($id);
-		return $this->response->array($repository->toArray());
+		try {
+			$repository = $this->repository->with(['user', 'addresses', 'carts.products', 'orders.detail'])->find($id);
+			return $this->response->array($repository->toArray());
+		} catch (\Exception $e) {
+			throw new \Dingo\Api\Exception\ResourceException("Error Processing Request", $e->getMessage());
+		}
 	}
 
 	/**
@@ -131,12 +135,11 @@ class CustomersController extends \Controller {
 	 */
 	public function update($id)
 	{
-		$repository 	= $this->repository->getModel()->findOrFail($id);
-		$user 			= $this->user->getModel()->findOrFail($repository->user_id);
-
-		\DB::beginTransaction();
-
 		try {
+			$repository 	= $this->repository->getModel()->findOrFail($id);
+			$user 			= $this->user->getModel()->findOrFail($repository->user_id);
+
+			\DB::beginTransaction();
 			$repository->fill(\Input::only(['first_name', 'last_name', 'dob', 'phone', 'active', 'note']));
 
 			if ($repository->save()) {
@@ -155,18 +158,18 @@ class CustomersController extends \Controller {
 				}
 
 				\DB::rollBack();
-				throw new \Dingo\Api\Exception\StoreResourceFailedException("Error Processing Request", $user->errors());
+				throw new \Dingo\Api\Exception\UpdateResourceFailedException("Error Processing Request", $user->errors());
 			}
 
 			\DB::rollBack();
-			throw new \Dingo\Api\Exception\StoreResourceFailedException("Error Processing Request", $repository->getErrors());
+			throw new \Dingo\Api\Exception\UpdateResourceFailedException("Error Processing Request", $repository->getErrors());
 
 		} catch (\LaravelBook\Ardent\InvalidModelException $e) {
 			\DB::rollBack();
-			throw new \Dingo\Api\Exception\StoreResourceFailedException("Error Processing Request", $e->getErrors());
+			throw new \Dingo\Api\Exception\UpdateResourceFailedException("Error Processing Request", $e->getErrors());
 		} catch (\Exception $e) {
 			\DB::rollBack();
-			throw new \Dingo\Api\Exception\StoreResourceFailedException("Error Processing Request", $e->errors());
+			throw new \Dingo\Api\Exception\UpdateResourceFailedException("Error Processing Request", $e->getMessage());
 		}
 	}
 
@@ -178,12 +181,14 @@ class CustomersController extends \Controller {
 	 */
 	public function destroy($id)
 	{
-		$repository = $this->repository->find($id);
-		if ($this->repository->delete($id)) {
-			return $this->response->array($repository->toArray());
+		try {
+			$repository = $this->repository->find($id);
+			if ($this->repository->delete($id)) {
+				return $this->response->array($repository->toArray());
+			}
+		} catch (\Exception $e) {
+			throw new \Dingo\Api\Exception\ResourceException("Error Processing Request", $e->getMessage());
 		}
-
-		throw new \Dingo\Api\Exception\DeleteResourceFailedException("Error Processing Request", 1);
 	}
 
 	/////////////////////////////

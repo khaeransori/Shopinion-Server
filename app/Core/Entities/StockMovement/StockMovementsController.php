@@ -63,8 +63,7 @@ class StockMovementsController extends \Controller {
 
 			return $this->response->array($response->toArray());
 		} catch (\Exception $e) {
-			throw new \Dingo\Api\Exception\ResourceException("Error Processing Request", $e->errors());
-			
+			throw new \Dingo\Api\Exception\ResourceException("Error Processing Request", $e->getMessage());
 		}
 	}
 
@@ -133,6 +132,8 @@ class StockMovementsController extends \Controller {
 
 		} catch (\LaravelBook\Ardent\InvalidModelException $e) {
 			throw new \Dingo\Api\Exception\StoreResourceFailedException("Error Processing Request", $e->getErrors());
+		} catch (\Exception $e) {
+			throw new \Dingo\Api\Exception\StoreResourceFailedException("Error Processing Request", $e->getMessage());
 		}
 	}
 }

@@ -35,9 +35,8 @@ class StockMovementReasonsController extends \Controller {
 			}
 
 			return $this->response->array($response->toArray());
-		} catch (Exception $e) {
-			throw new Dingo\Api\Exception\ResourceException("Error Processing Request", $e->errors());
-			
+		} catch (\Exception $e) {
+			throw new \Dingo\Api\Exception\ResourceException("Error Processing Request", $e->getMessage());
 		}
 	}
 }

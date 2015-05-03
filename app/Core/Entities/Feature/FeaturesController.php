@@ -33,7 +33,7 @@ class FeaturesController extends \Controller {
 			
 			return $this->response->array($response->toArray());
 		} catch (\Exception $e) {
-			throw new \Dingo\Api\Exception\ResourceException("Error Processing Request", $e->errors());
+			throw new \Dingo\Api\Exception\ResourceException("Error Processing Request", $e->getMessage());
 			
 		}
 	}
@@ -53,6 +53,8 @@ class FeaturesController extends \Controller {
 			return $this->response->array($repository->toArray());
 		} catch (\LaravelBook\Ardent\InvalidModelException $e) {
 			throw new \Dingo\Api\Exception\StoreResourceFailedException("Error Processing Request", $e->getErrors());
+		} catch (\Exception $e) {
+			throw new \Dingo\Api\Exception\StoreResourceFailedException("Error Processing Request", $e->getMessage());
 		}
 	}
 
@@ -65,8 +67,12 @@ class FeaturesController extends \Controller {
 	 */
 	public function show($id)
 	{
-		$repository = $this->repository->with(['values'])->find($id);
-		return $this->response->array($repository->toArray());
+		try {
+			$repository = $this->repository->with(['values'])->find($id);
+			return $this->response->array($repository->toArray());
+		} catch (\Exception $e) {
+			throw new \Dingo\Api\Exception\ResourceException("Error Processing Request", $e->getMessage());
+		}
 	}
 
 	/**
@@ -87,6 +93,8 @@ class FeaturesController extends \Controller {
 			return $this->response->array($repository->toArray());
 		} catch (\LaravelBook\Ardent\InvalidModelException $e) {
 			throw new \Dingo\Api\Exception\UpdateResourceFailedException("Error Processing Request", $e->getErrors());
+		} catch (\Exception $e) {
+			throw new \Dingo\Api\Exception\UpdateResourceFailedException("Error Processing Request", $e->getMessage());
 		}
 	}
 
@@ -99,12 +107,14 @@ class FeaturesController extends \Controller {
 	 */
 	public function destroy($id)
 	{
-		$repository = $this->repository->find($id);
-		if ($this->repository->delete($id)) {
-			return $this->response->array($repository->toArray());
+		try {
+			$repository = $this->repository->find($id);
+			if ($this->repository->delete($id)) {
+				return $this->response->array($repository->toArray());
+			}
+		} catch (\Exception $e) {
+			throw new \Dingo\Api\Exception\DeleteResourceFailedException("Error Processing Request", $e->getMessage());
 		}
-
-		throw new \Dingo\Api\Exception\DeleteResourceFailedException("Error Processing Request", 1);
 	}
 
 }

@@ -42,8 +42,7 @@ class UsersController extends \Controller {
 
 			return $this->response->array($response->toArray());
 		} catch (\Exception $e) {
-			throw new \Dingo\Api\Exception\ResourceException("Error Processing Request", $e->errors());
-			
+			throw new \Dingo\Api\Exception\ResourceException("Error Processing Request", $e->getMessage());
 		}
 	}
 
@@ -89,7 +88,7 @@ class UsersController extends \Controller {
 			throw new \Dingo\Api\Exception\StoreResourceFailedException("Error Processing Request", $user->errors());
 		} catch (\Exception $e) {
 			\DB::rollBack();
-			throw new \Dingo\Api\Exception\StoreResourceFailedException("Error Processing Request", $e->getErrors());
+			throw new \Dingo\Api\Exception\StoreResourceFailedException("Error Processing Request", $e->getMessage());
 		}
 	}
 
@@ -102,8 +101,12 @@ class UsersController extends \Controller {
 	 */
 	public function show($id)
 	{
-		$repository = $this->repository->find($id);
-		return $this->response->array($repository->toArray());
+		try {
+			$repository = $this->repository->find($id);
+			return $this->response->array($repository->toArray());
+		} catch (\Exception $e) {
+			throw new \Dingo\Api\Exception\ResourceException("Error Processing Request", $e->getMessage());
+		}
 	}
 
 
@@ -135,11 +138,11 @@ class UsersController extends \Controller {
 			}
 
 			\DB::rollBack();
-			throw new \Dingo\Api\Exception\StoreResourceFailedException("Error Processing Request", $user->errors());
+			throw new \Dingo\Api\Exception\UpdateResourceFailedException("Error Processing Request", $user->errors());
 
 		} catch (\Exception $e) {
 			\DB::rollBack();
-			throw new \Dingo\Api\Exception\StoreResourceFailedException("Error Processing Request", $e->errors());
+			throw new \Dingo\Api\Exception\UpdateResourceFailedException("Error Processing Request", $e->getMessage());
 		}
 	}
 
@@ -152,12 +155,14 @@ class UsersController extends \Controller {
 	 */
 	public function destroy($id)
 	{
-		$repository = $this->repository->find($id);
-		if ($this->repository->delete($id)) {
-			return $this->response->array($repository->toArray());
+		try {
+			$repository = $this->repository->find($id);
+			if ($this->repository->delete($id)) {
+				return $this->response->array($repository->toArray());
+			}
+		} catch (\Exception $e) {
+			throw new \Dingo\Api\Exception\DeleteResourceFailedException("Error Processing Request", $e->getMessage());
 		}
-
-		throw new \Dingo\Api\Exception\DeleteResourceFailedException("Error Processing Request", 1);
 	}
 
 	/**
@@ -226,5 +231,30 @@ class UsersController extends \Controller {
             $error_msg = \Lang::get('confide::confide.alerts.wrong_password_reset');
             return $error_msg;
         }
+    }
+
+    public function login()
+    {
+    	// grab credentials from the request
+	    $credentials = \Input::only('email', 'password');
+
+	    try {
+	        // attempt to verify the credentials and create a token for the user
+	        if (! $token = \JWTAuth::attempt($credentials)) {
+	        	throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException("Wrong Username or Password");
+	        }
+	    } catch (Tymon\JWTAuth\Exceptions\JWTException $e) {
+	        // something went wrong whilst attempting to encode the token
+	        throw new Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException("Could not create token");
+	    }
+
+	    $user = \JWTAuth::authenticate($token);
+
+	    $response = array(
+			'account' 			=> $user,
+			'token'   			=> $token
+	    );
+
+	    return $this->response->array($response);
     }
 }

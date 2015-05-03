@@ -44,8 +44,8 @@ class ProductAttributesController extends \Controller {
 			}
 
 			return $this->response->array($response->toArray());
-		} catch (Exception $e) {
-			throw new Dingo\Api\Exception\ResourceException("Error Processing Request", $e->errors());
+		} catch (\Exception $e) {
+			throw new Dingo\Api\Exception\ResourceException("Error Processing Request", $e->getMessage());
 			
 		}
 	}
@@ -105,6 +105,8 @@ class ProductAttributesController extends \Controller {
 		} catch (\LaravelBook\Ardent\InvalidModelException $e) {
 			DB::rollBack();
 			throw new \Dingo\Api\Exception\StoreResourceFailedException("Error Processing Request", $e->getErrors());
+		} catch (\Exception $e) {
+			throw new \Dingo\Api\Exception\StoreResourceFailedException("Error Processing Request", $e->getMessage());
 		}
 	}
 
@@ -117,8 +119,12 @@ class ProductAttributesController extends \Controller {
 	 */
 	public function show($id)
 	{
-		$repository = $this->repository->with(['attribute_combinations', 'attribute_combinations.group', 'stock'])->find($id);
-		return $this->response->array($repository->toArray());
+		try {
+			$repository = $this->repository->with(['attribute_combinations', 'attribute_combinations.group', 'stock'])->find($id);
+			return $this->response->array($repository->toArray());
+		} catch (\Exception $e) {
+			throw new \Dingo\Api\Exception\ResourceException("Error Processing Request", $e->getMessage());
+		}
 	}
 
 	/**
@@ -144,7 +150,7 @@ class ProductAttributesController extends \Controller {
 			if ((! ($attributes === 0)) && (! is_array($attributes))) {
 				$errors = ['attributes' => ['The attributes field is required.']];
 				DB::rollBack();
-				throw new \Dingo\Api\Exception\StoreResourceFailedException("Error Processing Request", $errors);
+				throw new \Dingo\Api\Exception\UpdateResourceFailedException("Error Processing Request", $errors);
 			}
 
 			$this->repository->getModel()->validate();
@@ -179,7 +185,9 @@ class ProductAttributesController extends \Controller {
 			return $this->response->array($repository->toArray());
 		} catch (\LaravelBook\Ardent\InvalidModelException $e) {
 			DB::rollBack();
-			throw new \Dingo\Api\Exception\StoreResourceFailedException("Error Processing Request", $e->getErrors());
+			throw new \Dingo\Api\Exception\UpdateResourceFailedException("Error Processing Request", $e->getErrors());
+		} catch (\Exception $e) {
+			throw new \Dingo\Api\Exception\UpdateResourceFailedException("Error Processing Request", $e->getMessage());
 		}
 	}
 
@@ -192,14 +200,16 @@ class ProductAttributesController extends \Controller {
 	 */
 	public function destroy($id)
 	{
-		$repository = $this->repository->find($id);
-		if ($this->repository->delete($id)) {
-			$new_default = $this->repository->findByField('product_id', $repository->product_id);
-			$this->repository->update(['default_on' => 1], $new_default->id);
+		try {
+			$repository = $this->repository->find($id);
+			if ($this->repository->delete($id)) {
+				$new_default = $this->repository->findByField('product_id', $repository->product_id);
+				$this->repository->update(['default_on' => 1], $new_default->id);
 
-			return $this->response->array($repository->toArray());
+				return $this->response->array($repository->toArray());
+			}
+		} catch (\Exception $e) {
+			throw new \Dingo\Api\Exception\DeleteResourceFailedException("Error Processing Request", $e->getMessage());
 		}
-
-		throw new \Dingo\Api\Exception\DeleteResourceFailedException("Error Processing Request", 1);
 	}
 }

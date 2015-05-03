@@ -106,9 +106,8 @@ class OrdersController extends \Controller {
 			}
 
 			return $this->response->array($response->toArray());
-		} catch (Exception $e) {
-			throw new Dingo\Api\Exception\ResourceException("Error Processing Request", $e->errors());
-			
+		} catch (\Exception $e) {
+			throw new \Dingo\Api\Exception\ResourceException("Error Processing Request", $e->getMessage());
 		}
 	}
 
@@ -285,21 +284,23 @@ class OrdersController extends \Controller {
 	 */
 	public function show($id)
 	{
-		$repository = $this->repository
-						->with([
-							'customer.user',
-							'cart',
-							'carrier',
-							'detail.product.images',
-							'delivery_address',
-							'history.state',
-							'invoice_address',
-							'state',
-							'payment'
-						])
-						->find($id);
-
-		return $this->response->array($repository->toArray());
+		try {
+			$repository = $this->repository
+							->with([
+								'customer.user',
+								'cart',
+								'carrier',
+								'detail.product.images',
+								'delivery_address',
+								'history.state',
+								'invoice_address',
+								'state',
+								'payment'
+							])
+							->find($id);
+		} catch (\Exception $e) {
+			throw new \Dingo\Api\Exception\ResourceException("Error Processing Request", $e->getMessage());
+		}
 	}
 
 	/**
@@ -375,6 +376,8 @@ class OrdersController extends \Controller {
 			return $this->response->array($repository->toArray());
 		} catch (\LaravelBook\Ardent\InvalidModelException $e) {
 			throw new \Dingo\Api\Exception\UpdateResourceFailedException("Error Processing Request", $e->getErrors());
+		} catch (\Exception $e) {
+			throw new \Dingo\Api\Exception\UpdateResourceFailedException("Error Processing Request", $e->getMessage());
 		}
 	}
 
@@ -580,7 +583,6 @@ class OrdersController extends \Controller {
 			throw new \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException();
 	    } catch (\Exception $e) {
 	    	\DB::rollBack();
-	    	return $e;
 			throw new \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException();
 	    }
 	}

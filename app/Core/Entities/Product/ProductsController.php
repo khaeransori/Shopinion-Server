@@ -93,9 +93,7 @@ class ProductsController extends \Controller {
 
 			return $this->response->array($response->toArray());
 		} catch (\Exception $e) {
-			return $e;
-			throw new \Dingo\Api\Exception\ResourceException("Error Processing Request", $e->errors());
-			
+			throw new \Dingo\Api\Exception\ResourceException("Error Processing Request", $e->getMessage());
 		}
 	}
 
@@ -132,6 +130,8 @@ class ProductsController extends \Controller {
 		} catch (\LaravelBook\Ardent\InvalidModelException $e) {
 			DB::rollBack();
 			throw new \Dingo\Api\Exception\StoreResourceFailedException("Error Processing Request", $e->getErrors());
+		} catch (\Exception $e) {
+			throw new \Dingo\Api\Exception\StoreResourceFailedException("Error Processing Request", $e->getMessage());
 		}
 	}
 
@@ -202,6 +202,8 @@ class ProductsController extends \Controller {
 			}
 		} catch (\LaravelBook\Ardent\InvalidModelException $e) {
 			throw new \Dingo\Api\Exception\UpdateResourceFailedException("Error Processing Request", $e->getErrors());
+		} catch (\Exception $e) {
+			throw new \Dingo\Api\Exception\UpdateResourceFailedException("Error Processing Request", $e->getMessage());
 		}
 	}
 
@@ -214,23 +216,25 @@ class ProductsController extends \Controller {
 	 */
 	public function destroy($id)
 	{
-		$repository = $this->repository->with(['combinations', 'productStock'])->find($id);
+		try {
+			$repository = $this->repository->with(['combinations', 'productStock'])->find($id);
 
-		if ($repository->product_stock->qty > 0) {
-			$errors = ['message' => ['You cannot delete this product because there\'s physical stock left.']];
-			throw new \Dingo\Api\Exception\DeleteResourceFailedException("Error Processing Request", 1);
+			if ($repository->product_stock->qty > 0) {
+				$errors = "You cannot delete this product because there's physical stock left.";
+				throw new \Dingo\Api\Exception\DeleteResourceFailedException($errors, 1);
+			}
+
+			if (count($repository->combinations) > 0) {
+				$errors = "You cannot delete this product because this product still have combinations.";
+				throw new \Dingo\Api\Exception\DeleteResourceFailedException($errors, 1);
+			}
+
+			if ($this->repository->delete($id)) {
+				return $this->response->array($repository->toArray());
+			}
+		} catch (\Exception $e) {
+			throw new \Dingo\Api\Exception\DeleteResourceFailedException("Error Processing Request", $e->getMessage());
 		}
-
-		if (count($repository->combinations) > 0) {
-			$errors = ['message' => ['You cannot delete this product because this product still have combinations.']];
-			throw new \Dingo\Api\Exception\DeleteResourceFailedException("Error Processing Request", 1);
-		}
-
-		if ($this->repository->delete($id)) {
-			return $this->response->array($repository->toArray());
-		}
-
-		throw new \Dingo\Api\Exception\DeleteResourceFailedException("Error Processing Request", 1);
 	}
 
 }

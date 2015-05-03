@@ -24,47 +24,52 @@ class CategoriesController extends \Controller {
 	 */
 	public function index()
 	{
-		$root = $this->repository->getModel()->root();
+		try {
+			$root = $this->repository->getModel()->root();
 
-		$active 				= \Input::get('active', 0);
-		$all					= \Input::get('all', 1);
-		$currentNode			= \Input::get('currentNode', 0);
-		$depth					= \Input::get('depth', 0);
-		$limit 					= \Input::get('limit', false);
-		$withCurrent			= \Input::get('withCurrent', 1);
-		$withCurrentDescendants = \Input::get('withCurrentDescendants', 1);
-		$withRoot 				= \Input::get('withRoot', 0);
+			$active 				= \Input::get('active', 0);
+			$all					= \Input::get('all', 1);
+			$currentNode			= \Input::get('currentNode', 0);
+			$depth					= \Input::get('depth', 0);
+			$limit 					= \Input::get('limit', false);
+			$withCurrent			= \Input::get('withCurrent', 1);
+			$withCurrentDescendants = \Input::get('withCurrentDescendants', 1);
+			$withRoot 				= \Input::get('withRoot', 0);
 
-		if ($all) {
-			$root = ($withRoot) ? $root->descendantsAndSelf() : $root->descendants();
-		}
+			if ($all) {
+				$root = ($withRoot) ? $root->descendantsAndSelf() : $root->descendants();
+			}
 
-		if ($currentNode) {
-			$currentNode = $this->repository->find($currentNode);
-			$currentNodeDescendants = $currentNode->getModel()->getDescendants();
+			if ($currentNode) {
+				$currentNode = $this->repository->find($currentNode);
+				$currentNodeDescendants = $currentNode->getModel()->getDescendants();
 
-			$root = (!$withCurrent) ? $root->withoutNode($currentNode) : $root;
-			if (!$withCurrentDescendants) {
-				foreach ($currentNodeDescendants as $currentNodeDescendant) {
-					$root->withoutNode($currentNodeDescendant);
+				$root = (!$withCurrent) ? $root->withoutNode($currentNode) : $root;
+				if (!$withCurrentDescendants) {
+					foreach ($currentNodeDescendants as $currentNodeDescendant) {
+						$root->withoutNode($currentNodeDescendant);
+					}
 				}
 			}
-		}
 
-		$root = ($depth) ? $root->limitDepth($depth) : $root;
+			$root = ($depth) ? $root->limitDepth($depth) : $root;
 
-		if (! ($active === 0)) {
-			$root = $root->where('active', 1);
-		}
-		
-		$response = $root->with('children');
-		if (!($limit === false) && is_numeric($limit)) {
-			$response = $response->paginate($limit);
-		} else {
-			$response = $response->get();
-		}
+			if (! ($active === 0)) {
+				$root = $root->where('active', 1);
+			}
+			
+			$response = $root->with('children');
+			if (!($limit === false) && is_numeric($limit)) {
+				$response = $response->paginate($limit);
+			} else {
+				$response = $response->get();
+			}
 
-		return $this->response->array($response->toArray());
+			return $this->response->array($response->toArray());
+			
+		} catch (\Exception $e) {
+			throw new \Dingo\Api\Exception\ResourceException("Error Processing Request", $e->getMessage());
+		}
 	}
 
 	/**
@@ -75,23 +80,27 @@ class CategoriesController extends \Controller {
 	 */
 	public function store()
 	{
-
-		$validator = $this->validator->make(\Input::all(), $this->repository->getModel()->getRules());
-		if (\Input::has('parent_id')) {
-			$parent = $this->repository->getModel()->findOrFail(\Input::get('parent_id'));
-		}
-
-		if ($validator->passes()) {
-			$repository = $this->repository->create(\Input::only(['name', 'description', 'parent_id']));
-
+		try {
+			$validator = $this->validator->make(\Input::all(), $this->repository->getModel()->getRules());
 			if (\Input::has('parent_id')) {
-				$repository->getModel()->makeChildOf($parent);
+				$parent = $this->repository->getModel()->findOrFail(\Input::get('parent_id'));
 			}
 
-			return $this->response->array($repository->toArray());
+			if ($validator->passes()) {
+				$repository = $this->repository->create(\Input::only(['name', 'description', 'parent_id']));
+
+				if (\Input::has('parent_id')) {
+					$repository->getModel()->makeChildOf($parent);
+				}
+
+				return $this->response->array($repository->toArray());
+			}
+			throw new \Dingo\Api\Exception\StoreResourceFailedException("Error Processing Request", $validator->messages());
+		} catch (\Exception $e) {
+			throw new \Dingo\Api\Exception\StoreResourceFailedException("Error Processing Request", $e->getMessage());
+			
 		}
 
-		throw new \Dingo\Api\Exception\StoreResourceFailedException("Error Processing Request", $validator->messages());
 	}
 
 	/**
@@ -103,20 +112,24 @@ class CategoriesController extends \Controller {
 	 */
 	public function show($id)
 	{
-		$active = \Input::get('active', 0);
+		try {
+			$active = \Input::get('active', 0);
 
-		$repository = $this->repository
-							->getModel()
-							->with([
-								'parent',
-								'children' => function ($query) use ($active)
-								{
-									(! ($active === 0)) ? $query->where('active', 1) : '';
-								}
-							])
-							->findOrFail($id);
+			$repository = $this->repository
+								->getModel()
+								->with([
+									'parent',
+									'children' => function ($query) use ($active)
+									{
+										(! ($active === 0)) ? $query->where('active', 1) : '';
+									}
+								])
+								->findOrFail($id);
 
-		return $this->response->array($repository->toArray());
+			return $this->response->array($repository->toArray());
+		} catch (\Exception $e) {
+			throw new \Dingo\Api\Exception\ResourceException("Error Processing Request", $e->getMessage());
+		}
 	}
 
 	/**
@@ -128,24 +141,28 @@ class CategoriesController extends \Controller {
 	 */
 	public function update($id)
 	{
-		$repository = $this->repository->getModel()->findOrFail($id);
+		try {
+			$repository = $this->repository->getModel()->findOrFail($id);
 
-		$validator = $this->validator->make(\Input::all(), $this->repository->getModel()->getRules());
-		if (\Input::has('parent_id')) {
-			$parent = $this->repository->getModel()->findOrFail(\Input::get('parent_id'));
-		}
-
-		if ($validator->passes()) {
-			$this->repository->update(\Input::only(['parent_id', 'name', 'description', 'active']), $id);
-
+			$validator = $this->validator->make(\Input::all(), $this->repository->getModel()->getRules());
 			if (\Input::has('parent_id')) {
-				$repository->getModel()->makeChildOf($parent);
+				$parent = $this->repository->getModel()->findOrFail(\Input::get('parent_id'));
 			}
 
-			return $this->response->array($repository->toArray());
-		}
+			if ($validator->passes()) {
+				$this->repository->update(\Input::only(['parent_id', 'name', 'description', 'active']), $id);
 
-		throw new \Dingo\Api\Exception\StoreResourceFailedException("Error Processing Request", $validator->messages());
+				if (\Input::has('parent_id')) {
+					$repository->getModel()->makeChildOf($parent);
+				}
+
+				return $this->response->array($repository->toArray());
+			}
+
+			throw new \Dingo\Api\Exception\UpdateResourceFailedException("Error Processing Request", $validator->messages());
+		} catch (\Exception $e) {
+			throw new \Dingo\Api\Exception\UpdateResourceFailedException("Error Processing Request", $e->getMessage());
+		}
 	}
 
 	/**
@@ -157,12 +174,15 @@ class CategoriesController extends \Controller {
 	 */
 	public function destroy($id)
 	{
-		$repository = $this->repository->getModel()->findOrFail($id);
-		if ($this->repository->delete($id)) {
-			return $this->response->array($repository->toArray());
+		try {
+			$repository = $this->repository->getModel()->findOrFail($id);
+			if ($this->repository->delete($id)) {
+				return $this->response->array($repository->toArray());
+			}
+		} catch (\Exception $e) {
+			throw new \Dingo\Api\Exception\DeleteResourceFailedException("Error Processing Request", $e->getMessage());
 		}
 
-		throw new \Dingo\Api\Exception\DeleteResourceFailedException("Error Processing Request", 1);
 	}
 
 }

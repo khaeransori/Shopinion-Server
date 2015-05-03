@@ -67,7 +67,7 @@ class CartsController extends \Controller {
 
 			return $this->response->array($response->toArray());
 		} catch (\Exception $e) {
-			throw new \Dingo\Api\Exception\ResourceException("Error Processing Request", $e->errors());
+			throw new \Dingo\Api\Exception\ResourceException("Error Processing Request", $e->getMessage());
 			
 		}
 	}
@@ -115,6 +115,8 @@ class CartsController extends \Controller {
 			return $this->response->array($repository->toArray());
 		} catch (\LaravelBook\Ardent\InvalidModelException $e) {
 			throw new \Dingo\Api\Exception\StoreResourceFailedException("Error Processing Request", $e->getErrors());
+		} catch (\Exception $e) {
+			throw new \Dingo\Api\Exception\StoreResourceFailedException("Error Processing Request", $e->getMessage());
 		}
 	}
 
@@ -127,16 +129,20 @@ class CartsController extends \Controller {
 	 */
 	public function show($id)
 	{
-		$repository = $this->repository->with([
-			'carrier',
-			'customer.user',
-			'delivery_address',
-			'invoice_address',
-			'products.product.images',
-			'products.combination.attribute_combinations.group',
-			'order'
-		])->find($id);
-		return $this->response->array($repository->toArray());
+		try {
+			$repository = $this->repository->with([
+				'carrier',
+				'customer.user',
+				'delivery_address',
+				'invoice_address',
+				'products.product.images',
+				'products.combination.attribute_combinations.group',
+				'order'
+			])->find($id);
+			return $this->response->array($repository->toArray());
+		} catch (\Exception $e) {
+			throw new \Dingo\Api\Exception\ResourceException("Error Processing Request", $e->getMessage());
+		}
 	}
 
 	/**
@@ -166,14 +172,14 @@ class CartsController extends \Controller {
 						$this->address->find($delivery_address_id);
 					} else {
 						$errors = ['delivery_address_id' => ['The delivery address field is required.']];
-						throw new \Dingo\Api\Exception\StoreResourceFailedException("Error Processing Request", $errors);
+						throw new \Dingo\Api\Exception\UpdateResourceFailedException("Error Processing Request", $errors);
 					}
 
 					if (!($invoice_address_id === 0)) {
 						$this->address->find($invoice_address_id);
 					} else {
 						$errors = ['invoice_address_id' => ['The invoice address field is required.']];
-						throw new \Dingo\Api\Exception\StoreResourceFailedException("Error Processing Request", $errors);
+						throw new \Dingo\Api\Exception\UpdateResourceFailedException("Error Processing Request", $errors);
 					}
 				}
 			}
@@ -185,7 +191,9 @@ class CartsController extends \Controller {
 
 			return $this->response->array($repository->toArray());
 		} catch (\LaravelBook\Ardent\InvalidModelException $e) {
-			throw new \Dingo\Api\Exception\StoreResourceFailedException("Error Processing Request", $e->getErrors());
+			throw new \Dingo\Api\Exception\UpdateResourceFailedException("Error Processing Request", $e->getErrors());
+		} catch (\Exception $e) {
+			throw new \Dingo\Api\Exception\UpdateResourceFailedException("Error Processing Request", $e->getMessage());
 		}
 	}
 
@@ -198,14 +206,17 @@ class CartsController extends \Controller {
 	 */
 	public function destroy($id)
 	{
-		$repository = $this->repository->find($id);
-		if ($repository->ordered === 0) {
-			if ($this->repository->delete($id)) {
-				return $this->response->array($repository->toArray());
+		try {
+			$repository = $this->repository->find($id);
+			if ($repository->ordered === 0) {
+				if ($this->repository->delete($id)) {
+					return $this->response->array($repository->toArray());
+				}
 			}
+		} catch (\Exception $e) {
+			throw new \Dingo\Api\Exception\DeleteResourceFailedException("Error Processing Request", $e->getMessage());
 		}
 
-		throw new \Dingo\Api\Exception\DeleteResourceFailedException("Error Processing Request", 1);
 	}
 
 	/////////////////////////////

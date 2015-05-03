@@ -20,7 +20,7 @@ Route::get('/', function()
 
 
 Route::api('v1', function () {
-	Route::group(['prefix' => 'api'], function () {
+	Route::group(['prefix' => 'api', 'protected' => true], function () {
 		# BEGIN SETTINGS GROUPS #
 		Route::resource('bank_accounts', '\App\Core\Entities\BankAccount\BankAccountsController');
 		# END SETTINGS GROUPS #
@@ -56,17 +56,18 @@ Route::api('v1', function () {
 		Route::resource('cart_products', '\App\Core\Entities\CartProduct\CartProductsController');
 		Route::resource('carriers', '\App\Core\Entities\Carrier\CarriersController');
 		Route::resource('payments', '\App\Core\Entities\Payment\PaymentsController');
-		Route::resource('order_states', '\App\Core\Entities\OrderState\OrderStatesController');
+		Route::resource('order_states', '\App\Core\Entities\OrderState\OrderStatesController', ['only' => 'index']);
 		# END CART GROUPS #
 		
 		Route::resource('orders', '\App\Core\Entities\Order\OrdersController');
 		Route::resource('reports', '\App\Core\Entities\Report\ReportsController', ['only' => 'index']);
-
 		
-		Route::get('users/reset_password/{token}', '\App\Core\Entities\User\UsersController@resetPassword');
-		Route::post('users/reset_password', '\App\Core\Entities\User\UsersController@doResetPassword');
-		Route::get('users/confirm/{code}', '\App\Core\Entities\User\UsersController@confirm');
 		Route::resource('users', '\App\Core\Entities\User\UsersController');
+
+		Route::get('users/reset_password/{token}', ['protected' => false, 'uses' => '\App\Core\Entities\User\UsersController@resetPassword']);
+		Route::post('users/reset_password', ['protected' => false, 'uses' => '\App\Core\Entities\User\UsersController@doResetPassword']);
+		Route::get('users/confirm/{code}', ['protected' => false, 'uses' => '\App\Core\Entities\User\UsersController@confirm']);
+		Route::post('login', ['protected' => false, 'uses' => '\App\Core\Entities\User\UsersController@login']);
     });
 });
 
