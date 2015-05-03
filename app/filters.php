@@ -24,7 +24,6 @@ App::before(function($request)
 App::after(function($request, $response)
 {
 	//
-	header('Access-Control-Allow-Origin: *');
 });
 
 /*
