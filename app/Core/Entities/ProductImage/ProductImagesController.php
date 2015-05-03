@@ -112,10 +112,7 @@ class ProductImagesController extends \Controller {
 			    $data = array(
 			    	'cloudPath' => $cloudPath,
 			    	'filename'	=> $filename,
-			    	'default' => (string) $default,
-			    	'large'	  => (string) $large,
-			    	'medium'  => (string) $medium,
-			    	'cart'	  => (string) $cart
+			    	'default' => (string) $default
 			    );
 
 			    \Queue::push('\App\Core\Worker\ImageUploader', $data);
@@ -125,7 +122,6 @@ class ProductImagesController extends \Controller {
 			
 			throw new \Dingo\Api\Exception\StoreResourceFailedException("Error Processing Request", $validator->messages());
 		} catch (\Exception $e) {
-			return $e;
 			throw new \Dingo\Api\Exception\StoreResourceFailedException("Error Processing Request", $e->getErrors());
 		}
 	}
