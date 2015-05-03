@@ -107,19 +107,18 @@ class ProductImagesController extends \Controller {
 			    // 	$constraint->aspectRatio();
 			    // })->encode('data-url');
 
-			    $this->flysystem->put($cloudPath . $filename, (string) $default);
 			    $this->flysystem->put($cloudPath . "small_" . $filename, (string) $small);
 
-			    // $data = array(
-			    // 	'cloudPath' => $cloudPath,
-			    // 	'filename'	=> $filename,
-			    // 	'default' => (string) $default,
-			    // 	'large'	  => (string) $large,
-			    // 	'medium'  => (string) $medium,
-			    // 	'cart'	  => (string) $cart
-			    // );
+			    $data = array(
+			    	'cloudPath' => $cloudPath,
+			    	'filename'	=> $filename,
+			    	'default' => (string) $default,
+			    	'large'	  => (string) $large,
+			    	'medium'  => (string) $medium,
+			    	'cart'	  => (string) $cart
+			    );
 
-			    // \Queue::push('\App\Core\Worker\ImageUploader', $data);
+			    \Queue::push('\App\Core\Worker\ImageUploader', $data);
 			    \DB::commit();
 				return $this->response->array($repository->toArray());
 			}
