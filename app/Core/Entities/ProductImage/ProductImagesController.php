@@ -115,7 +115,7 @@ class ProductImagesController extends \Controller {
 			    // $small 	 = \Image::make($file)->fit(98)->encode('png');
 			    // $cart 	 = \Image::make($file)->fit(80)->encode('png');
 
-			    // $this->flysystem->put($cloudPath . $filename, (string) $default);
+			    $this->flysystem->put($cloudPath . $filename, (string) $default);
 			    // $this->flysystem->put($cloudPath . "large_" . $filename, (string) $large);
 			    // $this->flysystem->put($cloudPath . "medium_" . $filename, (string) $medium);
 			    // $this->flysystem->put($cloudPath . "small_" . $filename, (string) $small);
