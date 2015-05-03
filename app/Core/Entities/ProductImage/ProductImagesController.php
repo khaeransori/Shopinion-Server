@@ -119,7 +119,7 @@ class ProductImagesController extends \Controller {
 			    	'cart'	  => (string) $cart
 			    );
 
-			    // \Queue::push('\App\Core\Worker\ImageUploader', $data);
+			    \Queue::push('\App\Core\Worker\ImageUploader', $data);
 			    \DB::commit();
 				return $this->response->array($repository->toArray());
 			}
