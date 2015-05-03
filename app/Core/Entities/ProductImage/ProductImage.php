@@ -50,12 +50,12 @@ class ProductImage extends EloquentUuidModel {
 
 	public function getCartSourceAttribute()
 	{
-		return getenv("IMAGES_PATH") . '/' . $this->attributes['product_id'] . '/' . $this->attributes['id'] . '/cart_' . $this->attributes['id'] . '.png';
+		return getenv("IMAGES_PATH") . '/' . $this->attributes['product_id'] . '/' . $this->attributes['id'] . '/small_' . $this->attributes['id'] . '.png';
 	}
 
 	public function getSmallSourceAttribute()
 	{
-		return getenv("IMAGES_PATH") . '/' . $this->attributes['product_id'] . '/' . $this->attributes['id'] . '/cart_' . $this->attributes['id'] . '.png';
+		return getenv("IMAGES_PATH") . '/' . $this->attributes['product_id'] . '/' . $this->attributes['id'] . '/small_' . $this->attributes['id'] . '.png';
 	}
 
 	public function getMediumSourceAttribute()
