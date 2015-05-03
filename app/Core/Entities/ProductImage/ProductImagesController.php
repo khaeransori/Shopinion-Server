@@ -83,8 +83,6 @@ class ProductImagesController extends \Controller {
 				$filename  = $repository->id . '.png';
 			    $cloudPath = 'images/product/' . $product_id . '/' . $repository->id . '/';
 
-			    // $this->flysystem = \Flysystem::connection();
-
 			    $default = \Image::make($file)->resize(null, 800, function ($constraint)
 			    {
 			    	$constraint->aspectRatio();
@@ -109,18 +107,19 @@ class ProductImagesController extends \Controller {
 			    {
 			    	$constraint->aspectRatio();
 			    })->encode('png');
-			    // $default = \Image::make($file)->fit(800)->encode('png');
-			    // $large 	 = \Image::make($file)->fit(458)->encode('png');
-			    // $medium  = \Image::make($file)->fit(125)->encode('png');
-			    // $small 	 = \Image::make($file)->fit(98)->encode('png');
-			    // $cart 	 = \Image::make($file)->fit(80)->encode('png');
 
-			    $this->flysystem->put($cloudPath . $filename, (string) $default);
-			    // $this->flysystem->put($cloudPath . "large_" . $filename, (string) $large);
-			    // $this->flysystem->put($cloudPath . "medium_" . $filename, (string) $medium);
-			    // $this->flysystem->put($cloudPath . "small_" . $filename, (string) $small);
-			    // $this->flysystem->put($cloudPath . "cart_" . $filename, (string) $cart);
+			    $this->flysystem->put($cloudPath . "small_" . $filename, (string) $small);
 
+			    $data = array(
+			    	'cloudPath' => $cloudPath,
+			    	'filename'	=> $filename,
+			    	'default' => (string) $default,
+			    	'large'	  => (string) $large,
+			    	'medium'  => (string) $medium,
+			    	'cart'	  => (string) $cart
+			    );
+
+			    \Queue::push('\App\Core\Worker\ImageUploader', $data);
 			    \DB::commit();
 				return $this->response->array($repository->toArray());
 			}
