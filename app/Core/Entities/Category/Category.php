@@ -1,6 +1,6 @@
 <?php namespace App\Core\Entities\Category;
 
-use Shopinion\Services\Repositories\EloquentNodeModel;
+use App\Core\Services\Repositories\EloquentNodeModel;
 
 class Category extends EloquentNodeModel {
 

@@ -1,4 +1,4 @@
-<?php namespace Shopinion\Services\Repositories;
+<?php namespace App\Core\Services\Repositories;
 
 use Baum\Node;
 use Carbon\Carbon;

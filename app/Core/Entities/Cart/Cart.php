@@ -1,6 +1,6 @@
 <?php namespace App\Core\Entities\Cart;
 
-use Shopinion\Services\Repositories\EloquentUuidModel;
+use App\Core\Services\Repositories\EloquentUuidModel;
 use Illuminate\Support\Facades\DB;
 
 /**

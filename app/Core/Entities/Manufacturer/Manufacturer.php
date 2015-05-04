@@ -1,6 +1,6 @@
 <?php namespace App\Core\Entities\Manufacturer;
 
-use Shopinion\Services\Repositories\EloquentUuidModel;
+use App\Core\Services\Repositories\EloquentUuidModel;
 
 /**
  * Manufacturer

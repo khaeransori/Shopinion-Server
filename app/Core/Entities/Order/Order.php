@@ -1,7 +1,7 @@
 <?php namespace App\Core\Entities\Order;
 
 use Illuminate\Support\Facades\DB;
-use Shopinion\Services\Repositories\EloquentUuidModel;
+use App\Core\Services\Repositories\EloquentUuidModel;
 
 /**
  * Order

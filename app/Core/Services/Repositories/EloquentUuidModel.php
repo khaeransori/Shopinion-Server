@@ -1,10 +1,11 @@
-<?php namespace Shopinion\Services\Repositories;
+<?php namespace App\Core\Services\Repositories;
 
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
 use LaravelBook\Ardent\Ardent;
+use Rhumsaa\Uuid\Uuid;
 use Carbon\Carbon;
 
-class EloquentModel extends Ardent
+class EloquentUuidModel extends Ardent
 {
 	use SoftDeletingTrait;
 
@@ -41,5 +42,34 @@ class EloquentModel extends Ardent
 	    $datetime = $dt->toIso8601String();
 
 	    return $datetime;
+	}
+
+	/**
+     * The "booting" method of the model.
+     *
+     * @return void
+     */
+	public static function boot()
+	{
+		parent::boot();
+
+		/**
+         * Attach to the 'creating' Model Event to provide a UUID
+         * for the `id` field (provided by $model->getKeyName())
+         */
+		static::creating(function ($model)
+		{
+			$model->{$model->getKeyName()} = (string)$model->generateNewId();
+		});
+	}
+
+	/**
+     * Get a new version 4 (random) UUID.
+     *
+     * @return \Rhumsaa\Uuid\Uuid
+     */
+	public function generateNewId()
+	{
+		return Uuid::uuid4();
 	}
 }

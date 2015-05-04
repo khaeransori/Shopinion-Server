@@ -156,6 +156,12 @@ class UsersController extends \Controller {
 	public function destroy($id)
 	{
 		try {
+			if ($user = \JWTAuth::parseToken()->authenticate()) {
+				if ($user->id === $id) {
+					throw new \Dingo\Api\Exception\DeleteResourceFailedException("Cannot Delete Yourself");
+				}
+	        }
+
 			$repository = $this->repository->find($id);
 			if ($this->repository->delete($id)) {
 				return $this->response->array($repository->toArray());

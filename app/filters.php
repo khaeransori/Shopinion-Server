@@ -127,7 +127,7 @@ App::error(function(Symfony\Component\HttpKernel\Exception\HttpException $e, $co
 /**
  * Permission Exception Handler
  */
-App::error(function(Shopinion\Services\Exceptions\PermissionException $e, $code)
+App::error(function(App\Core\Services\Exceptions\PermissionException $e, $code)
 {
   return Response::json($e->getMessage(), $e->getCode());
 });
@@ -135,7 +135,7 @@ App::error(function(Shopinion\Services\Exceptions\PermissionException $e, $code)
 /**
  * Validation Exception Handler
  */
-App::error(function(Shopinion\Services\Exceptions\ValidationException $e, $code)
+App::error(function(App\Core\Services\Exceptions\ValidationException $e, $code)
 {
   return Response::json($e->getMessages(), $code);
 });
@@ -143,7 +143,7 @@ App::error(function(Shopinion\Services\Exceptions\ValidationException $e, $code)
 /**
  * Not Found Exception Handler
  */
-App::error(function(Shopinion\Services\Exceptions\NotFoundException $e)
+App::error(function(App\Core\Services\Exceptions\NotFoundException $e)
 {
   return Response::json($e->getMessage(), $e->getCode());
 });
@@ -181,3 +181,13 @@ App::error(function(Tymon\JWTAuth\Exceptions\JWTException $e, $code)
     }
 });
 
+/**
+ * Model Not Found Exception Handler
+ */
+App::error(function(Dingo\Api\Exception\InvalidAcceptHeaderException $e)
+{
+    return Response::json(array(
+    	'status_code' 	=> 401,
+    	'message'		=> $e->getMessage()
+    ), 401);
+});

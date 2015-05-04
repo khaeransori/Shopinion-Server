@@ -1,7 +1,7 @@
 <?php namespace App\Core\Entities\PaymentConfirmation;
 
 use Carbon\Carbon;
-use Shopinion\Services\Repositories\EloquentUuidModel;
+use App\Core\Services\Repositories\EloquentUuidModel;
 
 class PaymentConfirmation extends EloquentUuidModel {
 	

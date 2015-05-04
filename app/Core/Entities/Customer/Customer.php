@@ -1,7 +1,7 @@
 <?php namespace App\Core\Entities\Customer;
 
 use Carbon\Carbon;
-use Shopinion\Services\Repositories\EloquentUuidModel;
+use App\Core\Services\Repositories\EloquentUuidModel;
 use Illuminate\Support\Facades\DB;
 
 /**

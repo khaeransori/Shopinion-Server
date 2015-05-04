@@ -1,6 +1,6 @@
 <?php namespace App\Core\Entities\StockMovementReason;
 
-use Shopinion\Services\Repositories\EloquentModel;
+use App\Core\Services\Repositories\EloquentModel;
 
 /**
  * StockMovementReason

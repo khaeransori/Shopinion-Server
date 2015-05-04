@@ -1,4 +1,4 @@
-<?php namespace Shopinion\Services\Exceptions;
+<?php namespace App\Core\Services\Exceptions;
 
 class NotFoundException extends \Exception
 {
