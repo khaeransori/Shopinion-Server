@@ -1,6 +1,6 @@
 <?php
 
-use Rhumsaa\Uuid;
+use Rhumsaa\Uuid\Uuid;
 
 class UsersTableSeeder extends Seeder {
 
