@@ -67,6 +67,7 @@ class CustomersController extends \Controller {
 			$user->password              = \Input::get('password');
 			$user->password_confirmation = \Input::get('password');
 			$user->confirmation_code     = md5(uniqid(mt_rand(), true));
+			$user->confirmed             = 1;
 			$user->is_customer			 = 1;
 			if ($user->save()) {
 
