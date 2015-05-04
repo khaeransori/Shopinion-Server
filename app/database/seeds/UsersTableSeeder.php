@@ -8,7 +8,7 @@ class UsersTableSeeder extends Seeder {
 	{
 		\App\Core\Entities\User\User::create([
 			'id' 					=> Uuid::uuid4(),
-			'email'                 => 'administrator',
+			'email'                 => 'administrator@shopinion.com',
 			'password'              => 'administrator',
 			'password_confirmation' => 'administrator',
 			'confirmation_code'     => md5(uniqid(mt_rand(), true)),
