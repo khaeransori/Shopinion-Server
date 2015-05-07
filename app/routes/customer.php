@@ -65,6 +65,7 @@ Route::api('v1', function () {
 				 */
 				Route::resource('products', '\App\Core\Entities\Product\ProductsController', ['only' => ['index', 'show']]);
 				Route::resource('categories', '\App\Core\Entities\Category\CategoriesController', ['only' => ['index', 'show']]);
+				Route::resource('manufacturers', '\App\Core\Entities\Manufacturer\ManufacturersController',  ['only' => ['index', 'show']]);
 				/**
 				 * END CATALOG
 				 */
