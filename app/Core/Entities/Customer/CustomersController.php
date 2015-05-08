@@ -209,7 +209,9 @@ class CustomersController extends \Controller {
 	public function initCustomer()
 	{
 		$email = \Input::get('email', 0);
-		$response = array([]);
+		$response = array(
+			'init' => true
+		);
 		$customer = null;
 
 		try {
