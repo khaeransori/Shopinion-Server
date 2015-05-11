@@ -21,7 +21,7 @@
 	"require": {
 		"barryvdh/laravel-ide-helper": "~1.11",
 		"baum/baum": "~1.0",
-		"dingo/api": "dev-master",
+		"dingo/api": "dev-dev-master",
 		"doctrine/dbal": "~2.3",
 		"graham-campbell/flysystem": "~1.0",
 		"intervention/image": "~2.1",

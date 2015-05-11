@@ -17,7 +17,12 @@ Route::get('/', function()
 	return View::make('hello');
 });
 
-
+Route::get('images/{product_id}/{images_id}/{images}', function ($product_id, $images_id, $images)
+{
+	$path 		= 'files/' . $product_id . '/' . $images_id . '/' . $images;
+	$imgPath 	= storage_path($path);
+	return Image::make($imgPath)->response('png');
+});
 
 Route::api('v1', function () {
 	Route::group(['prefix' => 'api', 'protected' => true], function () {
