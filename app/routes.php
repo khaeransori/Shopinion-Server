@@ -19,9 +19,14 @@ Route::get('/', function()
 
 Route::get('images/{product_id}/{images_id}/{images}', function ($product_id, $images_id, $images)
 {
-	$path 		= 'files/' . $product_id . '/' . $images_id . '/' . $images;
-	$imgPath 	= storage_path($path);
-	return Image::make($imgPath)->response('png');
+	try {
+		$path 		= 'files/images/product/' . $product_id . '/' . $images_id . '/' . $images;
+		$imgPath 	= storage_path($path);
+		return Image::make($imgPath)->response('png');
+	} catch (Exception $e) {
+		throw new Exception("Error Processing Request", $e->getMessage());
+		
+	}
 });
 
 Route::api('v1', function () {
