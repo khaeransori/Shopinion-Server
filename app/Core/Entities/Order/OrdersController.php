@@ -338,11 +338,11 @@ class OrdersController extends \Controller {
 
 			// throw new Exception("Error Processing Request", $current_state);
 			
-			if ($state->paid === 1) {
+			if ((int)$state->paid === (int)1) {
 				$data_to_update['paid'] = 1;
 			}
 
-			if (($repository->paid === 1) && ($state->delivered === 1)) {
+			if (((int)$repository->paid === (int)1) && ((int)$state->delivered === (int)1)) {
 				$data_to_update['delivered'] = 1;
 			}
 
