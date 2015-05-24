@@ -134,8 +134,8 @@ class OrdersController extends \Controller {
 		$carrier  = $this->carrier->find($carrier_id);
 		$payment  = $this->payment->find($payment_id);
 
-		$message[] = $carrier->on_store;
-		if ($carrier->on_store === 1) {
+		$message[] = (int) $carrier->on_store;
+		if ((int) $carrier->on_store === (int) 1) {
 			$delivery_address_id = "";
 			$invoice_address_id  = "";
 			$message[] = 'masuk';
