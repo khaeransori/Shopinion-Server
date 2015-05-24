@@ -134,24 +134,18 @@ class OrdersController extends \Controller {
 		$carrier  = $this->carrier->find($carrier_id);
 		$payment  = $this->payment->find($payment_id);
 
-		$message[] = (int) $carrier->on_store;
 		if ((int) $carrier->on_store === (int) 1) {
 			$delivery_address_id = "";
 			$invoice_address_id  = "";
-			$message[] = 'masuk';
 		} else {
-			// $delivery_address = $this->address->find($delivery_address_id);
-			// $invoice_address  = $this->address->find($invoice_address_id);
-			$message[] = 'keluar';
+			$delivery_address = $this->address->find($delivery_address_id);
+			$invoice_address  = $this->address->find($invoice_address_id);
 		}
 
 		$product_to_input = array();
 		$warning          = array();
 		$total_price      = 0;
 
-		throw new \Dingo\Api\Exception\StoreResourceFailedException("Error Processing Request", $message);
-
-		
 		foreach ($cart->products as $product) {
 			$p = $this->product->find($product['product_id']);
 

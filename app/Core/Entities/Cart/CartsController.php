@@ -91,7 +91,7 @@ class CartsController extends \Controller {
 			if (! ($carrier_id === 0)) {
 				$carrier = $this->carrier->find($carrier_id);
 
-				if ($carrier->on_store === 0) {
+				if ((int) $carrier->on_store === (int) 0) {
 					if (!($delivery_address_id === 0)) {
 						$this->address->find($delivery_address_id);
 					} else {
