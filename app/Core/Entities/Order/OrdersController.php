@@ -336,8 +336,10 @@ class OrdersController extends \Controller {
 			$state         = $this->state->findByField('order', $current_state_order);
 			$current_state = $state->id;
 
+			// throw new Exception("Error Processing Request", $current_state);
+			
 			if ($state->paid === 1) {
-				$data_to_update['paid'] = "1";
+				$data_to_update['paid'] = 1;
 			}
 
 			if (($repository->paid === 1) && ($state->delivered === 1)) {
