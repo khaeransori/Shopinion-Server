@@ -298,6 +298,7 @@ class OrdersController extends \Controller {
 								'payment'
 							])
 							->find($id);
+			return $this->response->array($repository->toArray());
 		} catch (\Exception $e) {
 			throw new \Dingo\Api\Exception\ResourceException("Error Processing Request", $e->getMessage());
 		}
