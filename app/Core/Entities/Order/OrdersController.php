@@ -420,7 +420,7 @@ class OrdersController extends \Controller {
 				$this->cart->pushCriteria(new IsCustomerCriteria(1));
 
 				$cart     			 = $this->cart->findByField('customer_id', $customer->id);
-				
+
 				$customer_id         = $cart->customer_id;
 				$carrier_id          = \Input::get('carrier_id', 0);
 				$delivery_address_id = \Input::get('delivery_address_id', 0);
@@ -434,7 +434,7 @@ class OrdersController extends \Controller {
 				$carrier  = $this->carrier->find($carrier_id);
 				$payment  = $this->payment->find($payment_id);
 
-				if ($carrier->on_store === 1) {
+				if ((int) $carrier->on_store === (int) 1) {
 					$delivery_address_id = "";
 					$invoice_address_id  = "";
 				} else {
