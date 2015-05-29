@@ -47,7 +47,8 @@ class WishlistsController extends \Controller {
 							)
 							->whereHas('wishlist', function ($query) use ($repository) {
 								$query->where('customer_id', $repository->id);
-							});
+							})
+							->orderBy('name', 'asc');
 			
 				if (!($limit === false) && is_numeric($limit)) {
 					$response = $response->paginate($limit);
