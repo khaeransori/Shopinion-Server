@@ -29,7 +29,7 @@ class WishlistsController extends \Controller {
 
 		try {
 	        if ($user = \JWTAuth::parseToken()->authenticate()) {
-	        	$repository 	= $this->repository->findByField('user_id', $user->id);
+	        	$repository 	= $this->repository->skipCriteria()->findByField('user_id', $user->id);
 
 				$this->product->pushCriteria(new ActiveCriteria());
 
@@ -47,8 +47,8 @@ class WishlistsController extends \Controller {
 							)
 							->whereHas('wishlist', function ($query) use ($repository) {
 								$query->where('customer_id', $repository->id);
-							})
-							->orderBy('name', 'asc');
+							});
+							// ->orderBy('name', 'asc');
 			
 				if (!($limit === false) && is_numeric($limit)) {
 					$response = $response->paginate($limit);
