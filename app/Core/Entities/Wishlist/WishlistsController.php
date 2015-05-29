@@ -65,7 +65,6 @@ class WishlistsController extends \Controller {
 	    } catch (\Tymon\JWTAuth\Exceptions\JWTException $e) {
 			throw new \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException();
 	    } catch (\Exception $e) {
-	    	return $e;
 			throw new \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException();
 	    }
 	}
