@@ -28,7 +28,8 @@ class PaymentConfirmation extends EloquentUuidModel {
 
 	public static $relationsData = array(
 		'order'      => array(self::BELONGS_TO, '\App\Core\Entities\Order\Order'),
-		'payment'      => array(self::BELONGS_TO, '\App\Core\Entities\Payment\Payment')
+		'payment'      => array(self::BELONGS_TO, '\App\Core\Entities\Payment\Payment'),
+		'bank'      => array(self::BELONGS_TO, '\App\Core\Entities\BankAccount\BankAccount')
 	);
 
 	public function getDatePaidAttribute($value)

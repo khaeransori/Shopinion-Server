@@ -296,7 +296,7 @@ class OrdersController extends \Controller {
 								'invoice_address',
 								'state',
 								'payment',
-								'payment_confirmation'
+								'payment_confirmation.bank'
 							])
 							->find($id);
 			return $this->response->array($repository->toArray());
