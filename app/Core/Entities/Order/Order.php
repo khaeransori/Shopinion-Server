@@ -82,7 +82,8 @@ class Order extends EloquentUuidModel {
 		'history'		   => array(self::HAS_MANY, '\App\Core\Entities\OrderHistory\OrderHistory'),
 		'invoice_address'  => array(self::BELONGS_TO, '\App\Core\Entities\CustomerAddress\CustomerAddress', 'foreignKey' => 'invoice_address_id'),
 		'state'            => array(self::BELONGS_TO, '\App\Core\Entities\OrderState\OrderState', 'foreignKey' => 'current_state'),
-		'payment'          => array(self::BELONGS_TO, '\App\Core\Entities\Payment\Payment')
+		'payment'          => array(self::BELONGS_TO, '\App\Core\Entities\Payment\Payment'),
+		'payment_confirmation'		=> array(self::HAS_ONE, '\App\Core\Entities\PaymentConfirmation\PaymentConfirmation', 'foreignKey' => 'order_id', 'localKey' => 'id')
 	);
 
 	/**

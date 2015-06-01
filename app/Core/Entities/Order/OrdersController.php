@@ -295,7 +295,8 @@ class OrdersController extends \Controller {
 								'history.state',
 								'invoice_address',
 								'state',
-								'payment'
+								'payment',
+								'payment_confirmation'
 							])
 							->find($id);
 			return $this->response->array($repository->toArray());
